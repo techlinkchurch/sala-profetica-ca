@@ -211,7 +211,7 @@ export default function App() {
           <div className="stack">
             <Eyebrow>Você está na fila!</Eyebrow>
             <Stat label="Posição" value={`#${fase.posicao}`} />
-            <p>A confirmação chega no seu WhatsApp em instantes.</p>
+            <p>Tire um print desta tela: ela é a confirmação da sua inscrição.</p>
             <p>
               Quando chegar a mensagem avisando que é <strong>a sua vez</strong>, você terá{" "}
               <strong>10 minutos</strong> para chegar à Sala Profética.
