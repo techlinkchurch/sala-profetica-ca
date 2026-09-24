@@ -46,11 +46,11 @@ export function TelaRecusa({ recusa, onUsarOutroNumero }: Props) {
     case "ja_participou":
       return (
         <Tela
-          eyebrow="Inscrição já feita"
-          titulo={`Esse número já foi inscrito na Sala Profética de ${diaDaSemana(recusa.dia_inscrito)}.`}
+          eyebrow="Você já participou"
+          titulo={`Você já participou da Sala Profética de ${diaDaSemana(recusa.dia_inscrito)}.`}
         >
           <p>Para que mais pessoas tenham essa oportunidade, cada pessoa participa uma vez por conferência.</p>
-          <p>Se você não conseguiu comparecer no dia da sua inscrição, fale com um de nossos staffs.</p>
+          <p>Se achar que houve algum engano, fale com um de nossos staffs.</p>
           {outroNumero}
         </Tela>
       );

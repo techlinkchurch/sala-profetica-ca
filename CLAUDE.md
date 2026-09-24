@@ -9,7 +9,7 @@ Sistema de fila digital da **Sala Profética** nas conferências da Link Church.
 3. Ela entra na fila do dia e recebe automaticamente uma **mensagem de confirmação no WhatsApp**.
 4. Depois, a equipe chama pelo painel (outro módulo, fora deste escopo) e ela recebe a mensagem "Sua vez chegou".
 
-A Sala Profética da Céus Abertos 26 acontece na **sexta (25/09)** e no **sábado (26/09)**. A fila é **por dia**, com 50 vagas por dia. Cada pessoa participa **uma vez por conferência**: quem se inscreveu na sexta só pode se inscrever no sábado se a equipe tiver marcado a inscrição de sexta como `nao_compareceu`.
+A Sala Profética da Céus Abertos 26 acontece na **sexta (25/09)** e no **sábado (26/09)**. A fila é **por dia**, com 50 vagas por dia. Cada pessoa participa **uma vez por conferência**: quem foi **atendido** na sexta (`concluido`, ou `em_atendimento` quando o check-out foi esquecido) não pode se inscrever no sábado. Quem não foi atendido é liberado automaticamente: `aguardando`, `chamado`, `nao_compareceu` ou `falha_envio`.
 
 Issue no Jira: **SPC-5** — "Frontend: interface de cadastro via QR Code" (bermaxculture-team.atlassian.net, projeto SPC).
 
@@ -106,7 +106,7 @@ O que a função já faz sozinha (não duplicar no front):
 - Normaliza o telefone: tira a máscara e coloca 55 quando vier só DDD + número. Valida DDD e tamanho.
 - Cria ou atualiza o contato pelo telefone, **só quando a inscrição é aceita** (tentativas recusadas não alteram nada). Se a pessoa já existia, atualiza o nome e o e-mail. O opt-in só é **ligado**, nunca desligado, por esta tela.
 - Confere `vagas_dia` com uma trava, para dois cadastros simultâneos não estourarem o limite.
-- Bloqueia duplicidade no mesmo dia e a segunda participação na conferência (a não ser que a anterior seja `nao_compareceu`). Qualquer outro status do dia anterior bloqueia, inclusive `aguardando` e `falha_envio`.
+- Bloqueia duplicidade no mesmo dia e a segunda participação na conferência: só bloqueia se a pessoa tiver status `concluido` ou `em_atendimento` em outro dia real (`eh_teste = false`).
 - Usa a data e a hora do fuso de Belém para definir o `dia_evento` e o horário de abertura.
 
 ## Telas e mensagens
@@ -123,7 +123,7 @@ Mobile-first: praticamente todo mundo vai abrir pelo celular, lendo o QR Code no
 2. **Sucesso** (`ok: true`): "Você está na fila! Posição: N." Avisar que a confirmação chega no WhatsApp e que outra mensagem avisa quando for a vez.
 3. **Recusas** (`src/TelaRecusa.tsx`), sempre em tom amigável:
    - `ja_inscrito`: "Você já está na fila de hoje com esse número."
-   - `ja_participou`: já inscrito em outro dia; cada pessoa participa uma vez; quem não compareceu fala com a staff.
+   - `ja_participou`: já foi atendido em outro dia; cada pessoa participa uma vez; se achar que é engano, fala com a staff.
    - `ainda_nao_abriu`: "As inscrições de hoje abrem às 8h50."
    - `fora_do_periodo`: informa quando abre (ou que a conferência encerrou).
    - `vagas_esgotadas` com próximo dia (sexta): "tente de novo amanhã, sábado, a partir das 8h50". Sem próximo dia (sábado): próxima oportunidade virá, Deus continua falando sempre, anime-se para a conferência.
@@ -133,7 +133,7 @@ Mobile-first: praticamente todo mundo vai abrir pelo celular, lendo o QR Code no
 
 ## Testando localmente
 
-- Fora dos dias de `dias_sala_profetica`, toda chamada retorna `fora_do_periodo`. Para abrir um dia só para testes, inclua-o com `eh_teste = true`. **Atenção:** quem se inscrever de verdade na sexta, mesmo em teste, fica bloqueado no sábado, a não ser que a linha seja apagada ou marcada `nao_compareceu`.
+- Fora dos dias de `dias_sala_profetica`, toda chamada retorna `fora_do_periodo`. Para abrir um dia só para testes, inclua-o com `eh_teste = true`. Quem se inscrever na sexta em teste só fica bloqueado no sábado se a linha chegar a `concluido` ou `em_atendimento`.
 - **Cada cadastro com sucesso (com commit) envia um WhatsApp de verdade** para o número informado. Teste só com números da equipe, confirmados pelo Diogo. Nunca invente números. Para testar regras sem enviar, use a transação com `rollback` descrita em "Como mexer no backend".
 - Para testar de novo com o mesmo número no mesmo dia, apague a linha de teste da fila (só as linhas criadas no teste, identificadas pelo id).
 
