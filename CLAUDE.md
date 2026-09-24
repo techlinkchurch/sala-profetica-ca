@@ -15,7 +15,7 @@ Issue no Jira: **SPC-5** — "Frontend: interface de cadastro via QR Code" (berm
 
 ## Escopo deste repositório agora
 
-**Prioridade atual: o formulário público de cadastro (SPC-5).** O painel do coordenador (SPC-4) vem depois e **não deve ser iniciado** sem pedido explícito.
+**Prioridade atual: o formulário público de cadastro (SPC-5).** O painel do coordenador (**SPC-6**, com iniciar/finalizar sala) vem depois e **não deve ser iniciado** sem pedido explícito.
 
 Este projeto cuida do **frontend e do backend**. O Claude Code pode e deve alterar o Supabase (migrations, funções SQL, policies, Edge Functions) quando a task pedir, seguindo as regras da seção "Como mexer no backend".
 
@@ -29,7 +29,7 @@ Stack: React + Vite. Cliente: `@supabase/supabase-js` v2. Backend: Supabase (pro
   - status: `aguardando | chamado | em_atendimento | concluido | nao_compareceu | falha_envio` (check constraint). **Não existe** status `confirmado`: a confirmação é sempre enviada pelo sistema, nunca depende de a pessoa responder.
 - `config_sala`: uma linha só (id = 1) com grupos_ativos, vagas_dia (hoje **50**), tempo_limite_min (default 10).
 - `dias_sala_profetica`: dia (PK), abre_as (time, horário de Belém). São os dias da conferência atual que aceitam inscrição: sexta 25/09 a partir de 00:00 e sábado 26/09 a partir de 08:50. Também define o escopo da regra "uma participação por conferência". Só a equipe lê e altera; o público não acessa.
-- `staff_members`: user_id → auth.users. Base dos papéis da equipe; ainda sem policies (vai ser usada na SPC-4).
+- `staff_members`: user_id → auth.users. Base dos papéis da equipe; ainda sem policies (vai ser usada na SPC-6).
 
 **Policies:** o público (`anon`) só lê `config_sala`. Os usuários autenticados (equipe) leem e alteram contatos, fila e config. **Não existe INSERT público direto** nas tabelas: foi removido de propósito, e o cadastro passa só pela RPC.
 
