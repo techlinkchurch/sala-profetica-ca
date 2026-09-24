@@ -28,7 +28,7 @@ Stack: React + Vite. Cliente: `@supabase/supabase-js` v2. Backend: Supabase (pro
 - `fila_sala_profetica`: id, contato_id → contatos (on delete cascade), dia_evento (date), status, chamado_em, entrou_em, saiu_em, criado_em, `ultimo_wamid` (id da última mensagem de WhatsApp enviada, usado para casar com os eventos de status do webhook), `ultimo_erro` (existe mas ainda não é preenchido; é para mostrar o motivo da falha no painel). `unique(contato_id, dia_evento)`.
   - status: `aguardando | chamado | em_atendimento | concluido | nao_compareceu | falha_envio` (check constraint). **Não existe** status `confirmado`: a confirmação é sempre enviada pelo sistema, nunca depende de a pessoa responder.
 - `config_sala`: uma linha só (id = 1) com grupos_ativos, vagas_dia (hoje **50**), tempo_limite_min (default 10).
-- `dias_sala_profetica`: dia (PK), abre_as (time, horário de Belém). São os dias da conferência atual que aceitam inscrição: sexta 25/09 a partir de 00:00 e sábado 26/09 a partir de 08:50. Também define o escopo da regra "uma participação por conferência". Só a equipe lê e altera; o público não acessa.
+- `dias_sala_profetica`: dia (PK), abre_as (time, horário de Belém), eh_teste (boolean). São os dias que aceitam inscrição: sexta 25/09 a partir de 00:00 e sábado 26/09 a partir de 08:50. Os dias reais (`eh_teste = false`) definem o escopo da regra "uma participação por conferência". Dias com `eh_teste = true` (hoje, 24/09) aceitam inscrição de verdade, com WhatsApp, mas não bloqueiam nem são bloqueados pela regra. Só a equipe lê e altera; o público não acessa.
 - `staff_members`: user_id → auth.users. Base dos papéis da equipe; ainda sem policies (vai ser usada na SPC-6).
 
 **Policies:** o público (`anon`) só lê `config_sala`. Os usuários autenticados (equipe) leem e alteram contatos, fila e config. **Não existe INSERT público direto** nas tabelas: foi removido de propósito, e o cadastro passa só pela RPC.
@@ -133,7 +133,7 @@ Mobile-first: praticamente todo mundo vai abrir pelo celular, lendo o QR Code no
 
 ## Testando localmente
 
-- Fora dos dias de `dias_sala_profetica`, toda chamada retorna `fora_do_periodo`. Na sexta, as inscrições ficam abertas o dia todo, e é o dia de testar com a equipe. **Atenção:** quem se inscrever de verdade na sexta, mesmo em teste, fica bloqueado no sábado, a não ser que a linha seja apagada ou marcada `nao_compareceu`.
+- Fora dos dias de `dias_sala_profetica`, toda chamada retorna `fora_do_periodo`. Para abrir um dia só para testes, inclua-o com `eh_teste = true`. **Atenção:** quem se inscrever de verdade na sexta, mesmo em teste, fica bloqueado no sábado, a não ser que a linha seja apagada ou marcada `nao_compareceu`.
 - **Cada cadastro com sucesso (com commit) envia um WhatsApp de verdade** para o número informado. Teste só com números da equipe, confirmados pelo Diogo. Nunca invente números. Para testar regras sem enviar, use a transação com `rollback` descrita em "Como mexer no backend".
 - Para testar de novo com o mesmo número no mesmo dia, apague a linha de teste da fila (só as linhas criadas no teste, identificadas pelo id).
 
