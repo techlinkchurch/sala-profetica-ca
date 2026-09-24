@@ -63,8 +63,7 @@ export type Ok = { ok: true };
  * painel_estado()                                   -> EstadoPainel | Recusa
  * painel_iniciar_sala()                             -> (Ok & { chamados: number }) | Recusa
  *     cria a sessão do dia e chama em lote: vagas livres = grupos_ativos - count(chamado + em_atendimento)
- * painel_chamar(p_fila_id uuid)                     -> Ok | Recusa
- *     aguardando|falha_envio -> chamado (chamada manual/reenvio; ignora o limite de vagas). Exige sala iniciada.
+ * (Pelo PRD não existe chamada manual/fora de ordem: só o lote inicial e a reposição automática por vaga.)
  * painel_check_in(p_fila_id uuid)                   -> Ok | Recusa
  *     chamado|falha_envio -> em_atendimento (entrou_em = now())
  * painel_check_out(p_fila_id uuid)                  -> (Ok & { chamados: number }) | Recusa
@@ -72,6 +71,7 @@ export type Ok = { ok: true };
  * painel_nao_compareceu(p_fila_id uuid)             -> (Ok & { chamados: number }) | Recusa
  *     chamado|falha_envio -> nao_compareceu; depois repõe as vagas se a sala estiver em andamento
  * painel_definir_grupos(p_grupos int)               -> (Ok & { chamados: number }) | Recusa
+ *     SÓ ADMIN (PRD: configs são do admin; coordenador recebe nao_autorizado).
  *     1..50; se aumentar com a sala em andamento, chama mais gente
  * painel_finalizar_sala(p_concluidos uuid[], p_nao_compareceram uuid[]) -> Ok | Recusa
  *     marca os ids informados (só de chamado|em_atendimento|falha_envio de hoje) e encerra a sessão.
@@ -82,7 +82,6 @@ export type Ok = { ok: true };
 export const RPC = {
   estado: "painel_estado",
   iniciar: "painel_iniciar_sala",
-  chamar: "painel_chamar",
   checkIn: "painel_check_in",
   checkOut: "painel_check_out",
   naoCompareceu: "painel_nao_compareceu",
