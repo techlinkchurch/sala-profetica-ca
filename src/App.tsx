@@ -12,6 +12,7 @@ import {
   Window,
 } from "./design-system";
 import { AvisoLocal } from "./AvisoLocal";
+import { BotaoIngresso } from "./BotaoIngresso";
 import { inscreverNaFila, type ErroDeCampo, type Recusa } from "./lib/inscricao";
 import { mascararTelefone } from "./lib/telefone";
 import { CAMPOS, MENSAGENS, validarCampo, type Campo, type Erros } from "./lib/validacao";
@@ -20,7 +21,7 @@ import "./App.css";
 
 type Fase =
   | { tipo: "formulario" }
-  | { tipo: "sucesso"; posicao: number }
+  | { tipo: "sucesso"; posicao: number; diaEvento: string; nome: string; email: string }
   | { tipo: "recusa"; recusa: RecusaEmTela };
 
 const CAMPO_DO_ERRO: Record<ErroDeCampo, Campo> = {
@@ -98,7 +99,13 @@ export default function App() {
       return;
     }
     if (resultado.ok) {
-      setFase({ tipo: "sucesso", posicao: resultado.posicao });
+      setFase({
+        tipo: "sucesso",
+        posicao: resultado.posicao,
+        diaEvento: resultado.dia_evento,
+        nome: nome.trim().replace(/\s+/g, " "),
+        email: email.trim().toLowerCase(),
+      });
       return;
     }
     if (ehErroDeCampo(resultado)) {
@@ -211,12 +218,21 @@ export default function App() {
           <div className="stack">
             <Eyebrow>Você está na fila!</Eyebrow>
             <Stat label="Posição" value={`#${fase.posicao}`} />
-            <p>Tire um print desta tela: ela é a confirmação da sua inscrição.</p>
+            <p>
+              Salve seu ingresso: ele é a confirmação da sua inscrição. Na entrada, a equipe confere pelo seu
+              e-mail.
+            </p>
             <p>
               Quando chegar a mensagem avisando que é <strong>a sua vez</strong>, você terá{" "}
               <strong>10 minutos</strong> para chegar à Sala Profética.
             </p>
             <AvisoLocal />
+            <BotaoIngresso
+              nome={fase.nome}
+              email={fase.email}
+              posicao={fase.posicao}
+              diaEvento={fase.diaEvento}
+            />
           </div>
         )}
 

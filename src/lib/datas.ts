@@ -13,13 +13,16 @@ export function diaDaSemana(dia: string): string {
   return DIAS_SEMANA[paraData(dia).getDay()];
 }
 
+/** "sábado, 26/09" */
+export function formatarDia(dia: string): string {
+  const d = paraData(dia);
+  return `${diaDaSemana(dia)}, ${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
 /** "sábado, 26/09" ou "amanhã, sábado, 26/09" */
 export function descreverDia(dia: string): string {
-  const d = paraData(dia);
-  const dataCurta = `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
-  const diferenca = Math.round((d.getTime() - paraData(hojeEmBelem()).getTime()) / 86_400_000);
-  const base = `${diaDaSemana(dia)}, ${dataCurta}`;
-  return diferenca === 1 ? `amanhã, ${base}` : base;
+  const diferenca = Math.round((paraData(dia).getTime() - paraData(hojeEmBelem()).getTime()) / 86_400_000);
+  return diferenca === 1 ? `amanhã, ${formatarDia(dia)}` : formatarDia(dia);
 }
 
 /** "08:50" -> "8h50"; "00:00" -> null (dia inteiro) */
