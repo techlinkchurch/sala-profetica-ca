@@ -7,7 +7,7 @@ export function PoliticaPrivacidade() {
   return (
     <PageShell>
       <Hero eyebrow="Sala Profética · Link Church" titleLight="Política de" titleStrong="Privacidade" size="md">
-        <p>Última atualização: 23 de setembro de 2026</p>
+        <p>Última atualização: 24 de setembro de 2026</p>
       </Hero>
 
       <Window>
@@ -38,8 +38,8 @@ export function PoliticaPrivacidade() {
                 <strong>Nome</strong> — para chamarmos você quando chegar sua vez.
               </li>
               <li>
-                <strong>Telefone (WhatsApp)</strong> — para confirmar sua entrada na fila e avisar quando estiver
-                perto da sua vez.
+                <strong>Telefone (WhatsApp)</strong> — para confirmar sua entrada na fila e avisar quando for a sua
+                vez.
               </li>
               <li>
                 <strong>E-mail</strong> — para contato sobre o seu cadastro e, se você autorizar, para comunicações
@@ -54,10 +54,11 @@ export function PoliticaPrivacidade() {
           <Prose>
             <ul>
               <li>Organizar e gerenciar a fila de atendimento do dia do evento.</li>
-              <li>Enviar mensagens de WhatsApp confirmando seu cadastro e avisando quando sua vez estiver próxima.</li>
+              <li>Enviar mensagens de WhatsApp confirmando seu cadastro e avisando quando for a sua vez.</li>
               <li>
                 Se você optar por isso no cadastro, enviar comunicações futuras da Link Church (convites de eventos,
-                lembretes) — esse envio só acontece se você marcar essa opção explicitamente.
+                lembretes) pelo WhatsApp ou e-mail — esse envio só acontece se você marcar essa opção
+                explicitamente.
               </li>
             </ul>
           </Prose>
@@ -78,7 +79,8 @@ export function PoliticaPrivacidade() {
             <p>
               Seus dados não são vendidos nem compartilhados com terceiros para fins comerciais. Eles ficam
               armazenados em nossa infraestrutura (Supabase) e são usados exclusivamente para o funcionamento do
-              sistema de fila e, quando autorizado, para o envio de mensagens pela API oficial do WhatsApp (Meta).
+              sistema de fila, incluindo as mensagens de confirmação e de chamada enviadas pela API oficial do
+              WhatsApp (Meta), e, quando autorizado, para comunicações futuras.
             </p>
           </Prose>
         </NumberedSection>
