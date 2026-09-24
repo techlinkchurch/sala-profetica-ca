@@ -11,34 +11,30 @@ import {
   TextField,
   Window,
 } from "./design-system";
-import { inscreverNaFila, type MotivoRecusa } from "./lib/inscricao";
+import { AvisoLocal } from "./AvisoLocal";
+import { inscreverNaFila, type ErroDeCampo, type Recusa } from "./lib/inscricao";
 import { mascararTelefone } from "./lib/telefone";
 import { CAMPOS, MENSAGENS, validarCampo, type Campo, type Erros } from "./lib/validacao";
+import { TelaRecusa, type RecusaEmTela } from "./TelaRecusa";
 import "./App.css";
 
 type Fase =
   | { tipo: "formulario" }
   | { tipo: "sucesso"; posicao: number }
-  | { tipo: "ja_inscrito" }
-  | { tipo: "vagas_esgotadas" };
+  | { tipo: "recusa"; recusa: RecusaEmTela };
 
-const CAMPO_DO_MOTIVO: Partial<Record<MotivoRecusa, Campo>> = {
+const CAMPO_DO_ERRO: Record<ErroDeCampo, Campo> = {
   nome_invalido: "nome",
   telefone_invalido: "telefone",
   email_invalido: "email",
 };
 
+function ehErroDeCampo(r: Recusa): r is Extract<Recusa, { motivo: ErroDeCampo }> {
+  return r.motivo in CAMPO_DO_ERRO;
+}
+
 // O erro só aparece depois de uma pausa na digitação, para não piscar a cada tecla.
 const ATRASO_ERRO_MS = 600;
-
-function AvisoLocal() {
-  return (
-    <Alert tone="info" title="Onde fica a Sala Profética">
-      A Sala Profética acontecerá no <strong>prédio 2</strong>, em frente ao prédio onde está acontecendo a
-      conferência. Qualquer dúvida, procure um de nossos staffs.
-    </Alert>
-  );
-}
 
 export default function App() {
   const [fase, setFase] = useState<Fase>({ tipo: "formulario" });
@@ -105,13 +101,13 @@ export default function App() {
       setFase({ tipo: "sucesso", posicao: resultado.posicao });
       return;
     }
-    const campo = CAMPO_DO_MOTIVO[resultado.motivo];
-    if (campo) {
+    if (ehErroDeCampo(resultado)) {
+      const campo = CAMPO_DO_ERRO[resultado.motivo];
       setErros({ [campo]: MENSAGENS[campo] });
       refs[campo].current?.focus();
       return;
     }
-    setFase({ tipo: resultado.motivo as "ja_inscrito" | "vagas_esgotadas" });
+    setFase({ tipo: "recusa", recusa: resultado });
   }
 
   return (
@@ -224,24 +220,8 @@ export default function App() {
           </div>
         )}
 
-        {fase.tipo === "ja_inscrito" && (
-          <div className="stack">
-            <Eyebrow>Tudo certo</Eyebrow>
-            <h2 className="result-title">Você já está na fila de hoje com esse número.</h2>
-            <p>Fique de olho no WhatsApp: a gente te chama quando for a sua vez.</p>
-            <AvisoLocal />
-            <Button variant="ghost" onClick={() => setFase({ tipo: "formulario" })}>
-              Usar outro número
-            </Button>
-          </div>
-        )}
-
-        {fase.tipo === "vagas_esgotadas" && (
-          <div className="stack">
-            <Eyebrow>Inscrições encerradas</Eyebrow>
-            <h2 className="result-title">As inscrições para a Sala Profética de hoje foram encerradas.</h2>
-            <p>Obrigado pelo interesse. Aproveite a conferência!</p>
-          </div>
+        {fase.tipo === "recusa" && (
+          <TelaRecusa recusa={fase.recusa} onUsarOutroNumero={() => setFase({ tipo: "formulario" })} />
         )}
       </Window>
 
