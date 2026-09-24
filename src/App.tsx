@@ -31,8 +31,6 @@ const CAMPO_DO_MOTIVO: Partial<Record<MotivoRecusa, Campo>> = {
 // O erro só aparece depois de uma pausa na digitação, para não piscar a cada tecla.
 const ATRASO_ERRO_MS = 600;
 
-const PRIVACY_URL = import.meta.env.VITE_PRIVACY_POLICY_URL as string | undefined;
-
 export default function App() {
   const [fase, setFase] = useState<Fase>({ tipo: "formulario" });
   const [nome, setNome] = useState("");
@@ -188,15 +186,10 @@ export default function App() {
               label="Aceito receber comunicações da Link Church sobre eventos futuros pelo WhatsApp ou e-mail."
               description={
                 <>
-                  Sem marcar, seu número e e-mail só são usados para a Sala Profética de hoje.
-                  {PRIVACY_URL && (
-                    <>
-                      {" "}
-                      <a href={PRIVACY_URL} target="_blank" rel="noopener noreferrer">
-                        Política de Privacidade
-                      </a>
-                    </>
-                  )}
+                  Sem marcar, seu número e e-mail só são usados para a Sala Profética de hoje.{" "}
+                  <a href="/privacidade/" target="_blank" rel="noopener noreferrer">
+                    Política de Privacidade
+                  </a>
                 </>
               }
             />

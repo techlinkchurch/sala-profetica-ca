@@ -1,0 +1,21 @@
+.privacidade-intro {
+  margin-bottom: var(--space-6);
+  font-size: 1.125rem;
+}
+
+.privacidade-voltar {
+  margin: var(--space-6) 0 0;
+  text-align: center;
+}
+
+.privacidade-voltar a {
+  color: var(--color-on-dark);
+  font-weight: var(--weight-bold);
+  text-underline-offset: 0.2em;
+}
+
+.privacidade-voltar a:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
