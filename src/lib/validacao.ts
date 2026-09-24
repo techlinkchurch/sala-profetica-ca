@@ -8,7 +8,7 @@ export const CAMPOS: Campo[] = ["nome", "telefone", "email"];
 export const MENSAGENS: Record<Campo, string> = {
   nome: "Digite seu nome e sobrenome.",
   telefone: "Confira o número com DDD. Ex.: (91) 99999‑9999.",
-  email: "Esse e-mail parece incompleto. Confira ou deixe em branco.",
+  email: "Digite um e-mail válido. Ex.: nome@gmail.com.",
 };
 
 // Pelo menos duas palavras com 2+ letras: "Maria Silva" passa, "Maria" e "Maria S" não.
@@ -27,7 +27,7 @@ function telefoneValido(telefone: string): boolean {
 
 function emailValido(email: string): boolean {
   const e = email.trim();
-  return e === "" || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
+  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
 }
 
 export function validarCampo(campo: Campo, valor: string): string | undefined {

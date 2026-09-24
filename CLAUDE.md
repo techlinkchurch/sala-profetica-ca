@@ -5,7 +5,7 @@
 Sistema de fila digital da **Sala Profética** nas conferências da Link Church. Substitui a ficha de papel:
 
 1. Um QR Code exibido no culto abre **este formulário**.
-2. A pessoa preenche nome, telefone (WhatsApp), e-mail opcional e o opt-in de LGPD.
+2. A pessoa preenche nome, telefone (WhatsApp), e-mail e o opt-in de LGPD.
 3. Ela entra na fila do dia e recebe automaticamente uma **mensagem de confirmação no WhatsApp**.
 4. Depois, a equipe chama pelo painel (outro módulo, fora deste escopo) e ela recebe a mensagem "Sua vez chegou".
 
@@ -113,8 +113,8 @@ Mobile-first: praticamente todo mundo vai abrir pelo celular, lendo o QR Code no
 1. **Formulário**
    - Nome (obrigatório)
    - Telefone/WhatsApp com máscara `(99) 99999-9999` (obrigatório). A validação no front é só de conveniência; quem decide é a RPC.
-   - E-mail (opcional)
-   - Checkbox de LGPD **desmarcado por padrão**, com um texto como: "Aceito receber comunicações da Link Church sobre eventos futuros pelo WhatsApp." Sem marcar, o número só é usado para a Sala Profética daquele dia.
+   - E-mail (obrigatório)
+   - Checkbox de LGPD **desmarcado por padrão**, com um texto como: "Aceito receber comunicações da Link Church sobre eventos futuros pelo WhatsApp ou e-mail." Sem marcar, o número e o e-mail só são usados para a Sala Profética daquele dia.
    - Link para a Política de Privacidade: `<URL da política hospedada na Vercel — preencher>`
    - Botão desabilitado enquanto envia, para evitar clique duplo.
 2. **Sucesso** (`ok: true`): "Você está na fila! Posição: N." Avisar que a confirmação chega no WhatsApp e que outra mensagem avisa quando for a vez.

@@ -166,7 +166,6 @@ export default function App() {
             <TextField
               ref={refs.email}
               label="E-mail"
-              optional
               name="email"
               type="email"
               inputMode="email"
@@ -186,10 +185,10 @@ export default function App() {
               name="aceita_comunicacao"
               checked={aceita}
               onChange={(e) => setAceita(e.target.checked)}
-              label="Aceito receber comunicações da Link Church sobre eventos futuros pelo WhatsApp."
+              label="Aceito receber comunicações da Link Church sobre eventos futuros pelo WhatsApp ou e-mail."
               description={
                 <>
-                  Sem marcar, seu número só é usado para a Sala Profética de hoje.
+                  Sem marcar, seu número e e-mail só são usados para a Sala Profética de hoje.
                   {PRIVACY_URL && (
                     <>
                       {" "}
