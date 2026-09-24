@@ -31,6 +31,15 @@ const CAMPO_DO_MOTIVO: Partial<Record<MotivoRecusa, Campo>> = {
 // O erro só aparece depois de uma pausa na digitação, para não piscar a cada tecla.
 const ATRASO_ERRO_MS = 600;
 
+function AvisoLocal() {
+  return (
+    <Alert tone="info" title="Onde fica a Sala Profética">
+      A Sala Profética acontecerá no <strong>prédio 2</strong>, em frente ao prédio onde está acontecendo a
+      conferência. Qualquer dúvida, procure um de nossos staffs.
+    </Alert>
+  );
+}
+
 export default function App() {
   const [fase, setFase] = useState<Fase>({ tipo: "formulario" });
   const [nome, setNome] = useState("");
@@ -211,6 +220,7 @@ export default function App() {
               Quando chegar a mensagem avisando que é <strong>a sua vez</strong>, você terá{" "}
               <strong>10 minutos</strong> para chegar à Sala Profética.
             </p>
+            <AvisoLocal />
           </div>
         )}
 
@@ -219,6 +229,7 @@ export default function App() {
             <Eyebrow>Tudo certo</Eyebrow>
             <h2 className="result-title">Você já está na fila de hoje com esse número.</h2>
             <p>Fique de olho no WhatsApp: a gente te chama quando for a sua vez.</p>
+            <AvisoLocal />
             <Button variant="ghost" onClick={() => setFase({ tipo: "formulario" })}>
               Usar outro número
             </Button>
