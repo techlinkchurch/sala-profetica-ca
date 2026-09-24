@@ -1,0 +1,24 @@
+.ds-numbered-section + .ds-numbered-section {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-field-border);
+}
+
+.ds-numbered-section-title {
+  margin: 0 0 var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-title);
+  font-weight: var(--weight-black);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-on-surface-strong);
+}
+
+.ds-numbered-section-number {
+  font-size: var(--text-eyebrow);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--ca-petrol-600);
+}

@@ -1,0 +1,34 @@
+.ds-prose {
+  color: var(--color-on-surface);
+}
+
+.ds-prose > * + * {
+  margin-top: var(--space-3);
+}
+
+.ds-prose p,
+.ds-prose ul {
+  margin-bottom: 0;
+}
+
+.ds-prose ul {
+  padding-left: 1.25rem;
+}
+
+.ds-prose li + li {
+  margin-top: var(--space-2);
+}
+
+.ds-prose li::marker {
+  color: var(--ca-petrol-600);
+}
+
+.ds-prose strong {
+  color: var(--color-on-surface-strong);
+}
+
+.ds-prose a {
+  color: var(--ca-petrol-700);
+  font-weight: var(--weight-bold);
+  text-underline-offset: 0.15em;
+}

@@ -1,9 +1,35 @@
 .ds-alert {
-  margin: 0;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-field);
+  font-size: var(--text-small);
+  line-height: 1.4;
+}
+
+.ds-alert p {
+  margin: 0;
+}
+
+.ds-alert .ds-alert-title {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-eyebrow);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.ds-alert-danger {
   background: var(--color-danger-soft);
   color: var(--color-danger);
-  font-size: var(--text-small);
   font-weight: var(--weight-medium);
+}
+
+.ds-alert-info {
+  padding-left: calc(var(--space-4) - 4px);
+  border-left: 4px solid var(--ca-petrol-700);
+  background: rgb(134 202 219 / 0.3);
+  color: var(--color-on-surface-strong);
+}
+
+.ds-alert-info .ds-alert-title {
+  color: var(--ca-petrol-700);
 }
