@@ -1,9 +1,15 @@
 import type { ReactNode } from "react";
 import "./PageShell.css";
 
-export function PageShell({ children }: { children: ReactNode }) {
+type PageShellProps = {
+  children: ReactNode;
+  /** narrow (padrão): coluna de formulário. wide: painel/dashboard em tablet e notebook. */
+  width?: "narrow" | "wide";
+};
+
+export function PageShell({ children, width = "narrow" }: PageShellProps) {
   return (
-    <div className="ds-page">
+    <div className={`ds-page${width === "wide" ? " ds-page-wide" : ""}`}>
       <div className="ds-page-decor" aria-hidden="true">
         <span className="ds-page-ring" />
         <svg className="ds-page-chevrons" viewBox="0 0 200 120">

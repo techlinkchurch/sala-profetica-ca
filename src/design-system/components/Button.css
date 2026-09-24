@@ -48,3 +48,32 @@
 .ds-button-ghost:hover:not(:disabled) {
   background: rgb(22 89 106 / 0.08);
 }
+
+.ds-button-danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.ds-button-danger:hover:not(:disabled) {
+  background: #8f3526;
+}
+
+.ds-button-light {
+  background: transparent;
+  color: var(--color-on-dark);
+  box-shadow: inset 0 0 0 1.5px rgb(236 232 223 / 0.55);
+}
+
+.ds-button-light:hover:not(:disabled) {
+  background: rgb(236 232 223 / 0.1);
+}
+
+/* Compacto: 44px de altura mínima (alvo de toque), largura pelo conteúdo. */
+.ds-button-sm {
+  width: auto;
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  font-size: 0.9375rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-body);
+}

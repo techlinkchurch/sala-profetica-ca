@@ -1,0 +1,126 @@
+.ds-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-search-label {
+  font-weight: var(--weight-bold);
+  color: var(--color-on-surface-strong);
+}
+
+.ds-search-on-dark .ds-search-label {
+  color: var(--color-on-dark);
+}
+
+.ds-search-box {
+  position: relative;
+}
+
+.ds-search-icon {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: var(--ca-petrol-700);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.ds-search-input {
+  width: 100%;
+  height: 3.25rem;
+  padding: 0 3.25rem 0 3rem;
+  font: inherit;
+  font-size: 1.0625rem;
+  color: var(--color-on-surface-strong);
+  background: var(--color-field);
+  border: 1.5px solid var(--color-field-border);
+  border-radius: var(--radius-pill);
+  -webkit-appearance: none;
+  appearance: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.ds-search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.ds-search-input::placeholder {
+  color: rgb(22 89 106 / 0.5);
+}
+
+.ds-search-input:focus {
+  outline: none;
+  border-color: var(--ca-petrol-700);
+  box-shadow: 0 0 0 4px rgb(134 202 219 / 0.55);
+}
+
+.ds-search-clear {
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ca-petrol-700);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.ds-search-clear:hover {
+  background: rgb(22 89 106 / 0.08);
+}
+
+.ds-search-clear:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: -3px;
+}
+
+.ds-search-clear svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.ds-search-status {
+  margin: 0;
+  min-height: 1.25em;
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-on-surface-muted);
+}
+
+.ds-search-status:empty {
+  display: none;
+}
+
+.ds-search-on-dark .ds-search-status {
+  color: var(--color-on-dark-muted);
+}
+
+.ds-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

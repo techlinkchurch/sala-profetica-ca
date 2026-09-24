@@ -1,0 +1,68 @@
+.ds-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-stepper-label {
+  font-size: 0.8125rem;
+  font-weight: var(--weight-bold);
+  color: var(--color-on-surface-muted);
+}
+
+.ds-stepper-controls {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--space-1);
+  padding: 0.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-field);
+  box-shadow: inset 0 0 0 1.5px var(--color-field-border);
+}
+
+.ds-stepper-button {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ca-petrol-900);
+  color: var(--color-on-dark);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ds-stepper-button:hover:not(:disabled) {
+  background: var(--ca-petrol-800);
+}
+
+.ds-stepper-button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.ds-stepper-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ds-stepper-button svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.75;
+  stroke-linecap: round;
+}
+
+.ds-stepper-value {
+  min-width: 2.75rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: var(--weight-black);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-on-surface-strong);
+}

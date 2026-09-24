@@ -30,6 +30,14 @@
   color: var(--color-on-surface-strong);
 }
 
+.ds-alert-success {
+  padding-left: calc(var(--space-4) - 4px);
+  border-left: 4px solid var(--signal-go);
+  background: #e4efe0;
+  color: var(--color-success);
+  font-weight: var(--weight-medium);
+}
+
 .ds-alert-info .ds-alert-title {
   color: var(--ca-petrol-700);
 }

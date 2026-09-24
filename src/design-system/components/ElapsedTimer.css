@@ -1,0 +1,56 @@
+.ds-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.75rem 0.2rem 0.55rem;
+  border-radius: var(--radius-pill);
+  font-size: 1.0625rem;
+  font-weight: var(--weight-black);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1;
+  background: rgb(22 89 106 / 0.1);
+  color: var(--color-on-surface-strong);
+}
+
+.ds-timer-light {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--ca-petrol-600);
+}
+
+.ds-timer-go {
+  background: var(--signal-go-soft);
+  color: var(--signal-go-ink);
+}
+
+.ds-timer-go .ds-timer-light {
+  background: var(--signal-go);
+}
+
+.ds-timer-wait {
+  background: var(--signal-wait-soft);
+  color: var(--signal-wait-ink);
+}
+
+.ds-timer-wait .ds-timer-light {
+  background: var(--signal-wait);
+}
+
+.ds-timer-stop {
+  background: var(--signal-stop);
+  color: #fff;
+}
+
+.ds-timer-stop .ds-timer-light {
+  background: #fff;
+  animation: ds-timer-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes ds-timer-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}

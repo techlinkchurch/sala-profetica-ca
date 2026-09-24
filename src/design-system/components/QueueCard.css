@@ -1,0 +1,111 @@
+.ds-qcard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  box-shadow: var(--shadow-card);
+  border-left: 6px solid transparent;
+}
+
+.ds-qcard-compact {
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-field);
+}
+
+.ds-qcard-go {
+  border-left-color: var(--signal-go);
+}
+
+.ds-qcard-wait {
+  border-left-color: var(--signal-wait);
+}
+
+.ds-qcard-stop {
+  border-left-color: var(--signal-stop);
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 2px var(--signal-stop);
+}
+
+.ds-qcard-muted {
+  border-left-color: var(--status-nao-compareceu);
+}
+
+.ds-qcard-top {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.ds-qcard-leading {
+  flex: none;
+  min-width: 2.75rem;
+  font-size: 1.375rem;
+  font-weight: var(--weight-black);
+  line-height: 1.1;
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-on-surface-strong);
+}
+
+.ds-qcard-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ds-qcard-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: var(--weight-black);
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-on-surface-strong);
+  overflow-wrap: anywhere;
+}
+
+.ds-qcard-subtitle,
+.ds-qcard-meta {
+  margin: 0.2rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+.ds-qcard-subtitle {
+  font-size: 0.9375rem;
+  font-weight: var(--weight-medium);
+  color: var(--color-on-surface-strong);
+}
+
+.ds-qcard-meta {
+  font-size: 0.875rem;
+  color: var(--color-on-surface-muted);
+}
+
+.ds-qcard-aside {
+  flex: none;
+}
+
+.ds-qcard-note {
+  padding: var(--space-2) var(--space-3);
+  border-radius: 0.625rem;
+  background: var(--signal-stop-soft);
+  color: var(--signal-stop-ink);
+  font-size: 0.875rem;
+  font-weight: var(--weight-medium);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.ds-qcard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ds-qcard-actions > .ds-button {
+  flex: 1 1 8rem;
+}

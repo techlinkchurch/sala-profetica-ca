@@ -1,0 +1,102 @@
+.ds-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--space-3);
+  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+  background: rgb(6 30 36 / 0.62);
+  backdrop-filter: blur(2px);
+  animation: ds-modal-fade var(--duration-fast) var(--ease-out);
+}
+
+.ds-modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100dvh - 2 * var(--space-3));
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  border-radius: var(--radius-window);
+  box-shadow: var(--shadow-window);
+  overflow: hidden;
+  animation: ds-modal-rise 200ms var(--ease-out);
+}
+
+.ds-modal:focus {
+  outline: none;
+}
+
+.ds-modal-sm {
+  max-width: 28rem;
+}
+
+.ds-modal-md {
+  max-width: 40rem;
+}
+
+.ds-modal-header {
+  padding: var(--space-5) var(--space-5) var(--space-3);
+  background: var(--color-surface-bar);
+}
+
+.ds-modal-title {
+  margin: 0;
+  font-size: var(--text-title);
+  font-weight: var(--weight-black);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-on-surface-strong);
+}
+
+.ds-modal-description {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-small);
+  color: var(--color-on-surface-muted);
+}
+
+.ds-modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-5);
+  overscroll-behavior: contain;
+}
+
+.ds-modal-body > p {
+  margin: 0 0 var(--space-3);
+}
+
+.ds-modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border-top: 1px solid rgb(22 89 106 / 0.14);
+}
+
+.ds-modal-footer .ds-button {
+  flex: 1 1 9rem;
+}
+
+@media (min-width: 40rem) {
+  .ds-modal-backdrop {
+    align-items: center;
+    padding: var(--space-5);
+  }
+}
+
+@keyframes ds-modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ds-modal-rise {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}

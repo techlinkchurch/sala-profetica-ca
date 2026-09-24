@@ -16,6 +16,21 @@
   margin-inline: auto;
 }
 
+.ds-page-wide {
+  /* clip (e não hidden) para não virar contêiner de rolagem: permite position: sticky dentro do painel. */
+  overflow: clip;
+  padding-top: max(var(--space-5), env(safe-area-inset-top));
+}
+
+.ds-page-wide .ds-page-content {
+  max-width: 84rem;
+}
+
+/* No painel o cabeçalho é compacto e fica bem no topo: o anel passaria por cima do texto. */
+.ds-page-wide .ds-page-ring {
+  display: none;
+}
+
 .ds-page-decor {
   position: absolute;
   inset: 0;

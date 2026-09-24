@@ -1,0 +1,81 @@
+.ds-collapsible-heading {
+  margin: 0;
+  font-size: inherit;
+}
+
+.ds-collapsible-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 3rem;
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-field);
+  background: rgb(22 89 106 / 0.08);
+  color: var(--color-on-surface-strong);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ds-collapsible-trigger:hover {
+  background: rgb(22 89 106 / 0.14);
+}
+
+.ds-collapsible-trigger:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.ds-collapsible-title {
+  font-size: 1.0625rem;
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+}
+
+.ds-collapsible-count {
+  min-width: 1.75rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: rgb(22 89 106 / 0.14);
+  font-size: 0.875rem;
+  font-weight: var(--weight-bold);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-collapsible-chevron {
+  width: 1.375rem;
+  height: 1.375rem;
+  margin-left: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.is-open > .ds-collapsible-heading .ds-collapsible-chevron {
+  transform: rotate(180deg);
+}
+
+.ds-collapsible-content {
+  padding-top: var(--space-3);
+}
+
+.ds-collapsible-on-dark .ds-collapsible-trigger {
+  background: rgb(236 232 223 / 0.08);
+  color: var(--color-on-dark);
+  box-shadow: inset 0 0 0 1px rgb(236 232 223 / 0.16);
+}
+
+.ds-collapsible-on-dark .ds-collapsible-trigger:hover {
+  background: rgb(236 232 223 / 0.14);
+}
+
+.ds-collapsible-on-dark .ds-collapsible-count {
+  background: rgb(236 232 223 / 0.16);
+}

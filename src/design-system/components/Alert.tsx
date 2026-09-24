@@ -3,7 +3,7 @@ import "./Alert.css";
 
 type AlertProps = {
   children: ReactNode;
-  tone?: "danger" | "info";
+  tone?: "danger" | "info" | "success";
   title?: string;
 };
 
