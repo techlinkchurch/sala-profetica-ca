@@ -210,7 +210,7 @@ export default function App() {
         {fase.tipo === "sucesso" && (
           <div className="stack">
             <Eyebrow>Você está na fila!</Eyebrow>
-            <Stat label="Posição" value={fase.posicao} />
+            <Stat label="Posição" value={`#${fase.posicao}`} />
             <p>A confirmação chega no seu WhatsApp em instantes.</p>
             <p>
               Quando chegar a mensagem avisando que é <strong>a sua vez</strong>, você terá{" "}
