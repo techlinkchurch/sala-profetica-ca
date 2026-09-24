@@ -5,6 +5,7 @@ export { Alert } from "./components/Alert";
 export { Button } from "./components/Button";
 export { Checkbox } from "./components/Checkbox";
 export { Eyebrow } from "./components/Eyebrow";
+export { Hero } from "./components/Hero";
 export { NumberedList } from "./components/NumberedList";
 export { NumberedSection } from "./components/NumberedSection";
 export { PageShell } from "./components/PageShell";

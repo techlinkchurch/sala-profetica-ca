@@ -4,6 +4,7 @@ import {
   Button,
   Checkbox,
   Eyebrow,
+  Hero,
   NumberedList,
   PageShell,
   Stat,
@@ -108,18 +109,19 @@ export default function App() {
 
   return (
     <PageShell>
-      <header className="hero">
-        <Eyebrow align="right">Céus Abertos 26’ · Link Church</Eyebrow>
-        <h1 className="hero-title">
-          <span className="hero-title-sala">
+      <Hero
+        eyebrow="Céus Abertos 26’ · Link Church"
+        titleLight={
+          <>
             <strong>sa</strong>la
-          </span>
-          <span className="hero-title-profetica">Profética</span>
-        </h1>
-        <p className="hero-lede">
+          </>
+        }
+        titleStrong="Profética"
+      >
+        <p>
           Entre na fila <em>online</em>. Quando for a sua vez, a gente te chama pelo WhatsApp.
         </p>
-      </header>
+      </Hero>
 
       <Window aria-live="polite">
         {fase.tipo === "formulario" && (
