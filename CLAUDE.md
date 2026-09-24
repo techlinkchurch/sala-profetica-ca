@@ -42,6 +42,16 @@ Stack: React + Vite. Cliente: `@supabase/supabase-js` v2. Backend: Supabase (pro
 - `_preencher_vagas(p_dia)`: helper interno (ninguém da API executa). Com a sessão do dia em andamento, chama os `aguardando` mais antigos até ocupar `grupos_ativos − count(chamado + em_atendimento)`, travando `config_sala` para serializar. Cada linha que vira `chamado` dispara o WhatsApp de chamada.
 - Grants: `anon`/`authenticated` não têm TRUNCATE/TRIGGER/REFERENCES nas tabelas públicas.
 
+## Cadastrar a equipe do painel (`/painel/`)
+
+1. Supabase Dashboard → Authentication → Users → **Add user** (e-mail + senha, marcar "Auto Confirm User"). Senhas são criadas pelo Diogo, nunca no chat.
+2. Vincular como staff (SQL, pelo MCP ou SQL Editor), trocando o e-mail e o papel (`coordenador` ou `admin`):
+   ```sql
+   insert into public.staff_members (user_id, papel, nome)
+   select id, 'coordenador', 'Nome da pessoa' from auth.users where email = 'pessoa@exemplo.com';
+   ```
+3. Coordenador opera a fila; admin também altera os grupos ativos (PRD).
+
 ## Contrato das RPCs do painel
 
 Fonte da verdade: `src/painel/contrato.ts` (tipos + descrição de cada RPC). Resumo: `painel_estado`, `painel_iniciar_sala` (lote inicial = vagas livres), `painel_check_in`, `painel_check_out` e `painel_nao_compareceu` (os dois repõem 1 por 1), `painel_definir_grupos` (**só admin**), `painel_finalizar_sala` (encerra; sem reposição depois). "Hoje" = data de Belém; só linhas de hoje. Não existe chamada manual/fora de ordem (PRD). Retorno sempre `{ ok: true, ... }` ou `{ ok: false, motivo }`. Migrations em `supabase/migrations/2026092421*`.
