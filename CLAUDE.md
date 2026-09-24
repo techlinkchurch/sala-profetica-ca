@@ -29,7 +29,8 @@ Stack: React + Vite. Cliente: `@supabase/supabase-js` v2. Backend: Supabase (pro
   - status: `aguardando | chamado | em_atendimento | concluido | nao_compareceu | falha_envio` (check constraint). **Não existe** status `confirmado`: a confirmação é sempre enviada pelo sistema, nunca depende de a pessoa responder.
 - `config_sala`: uma linha só (id = 1) com grupos_ativos, vagas_dia (hoje **50**), tempo_limite_min (default 10).
 - `dias_sala_profetica`: dia (PK), abre_as (time, horário de Belém), eh_teste (boolean). São os dias que aceitam inscrição: sexta 25/09 a partir de 00:00 e sábado 26/09 a partir de 08:50. Os dias reais (`eh_teste = false`) definem o escopo da regra "uma participação por conferência". Dias com `eh_teste = true` (hoje, 24/09) aceitam inscrição de verdade, com WhatsApp, mas não bloqueiam nem são bloqueados pela regra. Só a equipe lê e altera; o público não acessa.
-- `staff_members`: user_id → auth.users. Base dos papéis da equipe; ainda sem policies (vai ser usada na SPC-6).
+- `staff_members`: user_id → auth.users, `papel` (`coordenador` | `admin`, default `coordenador`), `nome`, criado_em. Cada autenticado só lê a própria linha; ninguém escreve pela API (cadastro da equipe é pelo Dashboard/SQL).
+- `sessoes_sala`: dia (PK), iniciada_em/por, finalizada_em/por → auth.users. Uma sessão por dia, criada/encerrada só pelas RPCs do painel. Staff lê (RLS `is_staff()`), ninguém escreve direto. Está na publicação `supabase_realtime` (junto com `fila_sala_profetica`).
 
 **Policies:** o público (`anon`) só lê `config_sala`. Os usuários autenticados (equipe) leem e alteram contatos, fila e config. **Não existe INSERT público direto** nas tabelas: foi removido de propósito, e o cadastro passa só pela RPC.
 
@@ -37,6 +38,13 @@ Stack: React + Vite. Cliente: `@supabase/supabase-js` v2. Backend: Supabase (pro
 - `inscrever_na_fila(...)`: security definer, executável por `anon`. É a única entrada do formulário (contrato abaixo). O aviso do Supabase Advisor sobre ela ser pública é esperado.
 - `is_staff()`: security definer, usada nas policies da equipe.
 - `rls_auto_enable()`: origem desconhecida e executável pelo público. **Não mexer** sem confirmar com o Diogo.
+- `painel_*` (SPC-7): RPCs do painel, security definer, só `authenticated` executa, e todas começam checando `is_staff()`. Ver "Contrato das RPCs do painel".
+- `_preencher_vagas(p_dia)`: helper interno (ninguém da API executa). Com a sessão do dia em andamento, chama os `aguardando` mais antigos até ocupar `grupos_ativos − count(chamado + em_atendimento)`, travando `config_sala` para serializar. Cada linha que vira `chamado` dispara o WhatsApp de chamada.
+- Grants: `anon`/`authenticated` não têm TRUNCATE/TRIGGER/REFERENCES nas tabelas públicas.
+
+## Contrato das RPCs do painel
+
+Fonte da verdade: `src/painel/contrato.ts` (tipos + descrição de cada RPC). Resumo: `painel_estado`, `painel_iniciar_sala` (lote inicial = vagas livres), `painel_check_in`, `painel_check_out` e `painel_nao_compareceu` (os dois repõem 1 por 1), `painel_definir_grupos` (**só admin**), `painel_finalizar_sala` (encerra; sem reposição depois). "Hoje" = data de Belém; só linhas de hoje. Não existe chamada manual/fora de ordem (PRD). Retorno sempre `{ ok: true, ... }` ou `{ ok: false, motivo }`. Migrations em `supabase/migrations/2026092421*`.
 
 **Disparo de WhatsApp (não quebrar):**
 - Database Webhook `disparo_templates_fila` (Dashboard → Integrations → Database Webhooks) em INSERT e UPDATE de `fila_sala_profetica` chama a Edge Function `enviar-template-fila`, com o header `x-internal-secret`.
