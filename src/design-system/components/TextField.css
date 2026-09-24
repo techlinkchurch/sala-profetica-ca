@@ -1,0 +1,68 @@
+.ds-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-field-label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-weight: var(--weight-bold);
+  color: var(--color-on-surface-strong);
+}
+
+.ds-field-optional {
+  font-size: var(--text-eyebrow);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-muted);
+}
+
+.ds-field-input {
+  width: 100%;
+  height: 3.25rem;
+  padding: 0 var(--space-4);
+  font: inherit;
+  /* 16px+ evita o zoom automático do iOS ao focar */
+  font-size: 1.0625rem;
+  color: var(--color-on-surface-strong);
+  background: var(--color-field);
+  border: 1.5px solid var(--color-field-border);
+  border-radius: var(--radius-field);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.ds-field-input::placeholder {
+  color: rgb(22 89 106 / 0.4);
+}
+
+.ds-field-input:focus {
+  outline: none;
+  border-color: var(--ca-petrol-700);
+  box-shadow: 0 0 0 4px rgb(134 202 219 / 0.55);
+}
+
+.ds-field-error .ds-field-input {
+  border-color: var(--color-danger);
+  background: #fff;
+}
+
+.ds-field-hint,
+.ds-field-error-text {
+  margin: 0;
+  font-size: var(--text-small);
+  line-height: 1.35;
+}
+
+.ds-field-hint {
+  color: var(--color-on-surface-muted);
+}
+
+.ds-field-error-text {
+  color: var(--color-danger);
+  font-weight: var(--weight-medium);
+}

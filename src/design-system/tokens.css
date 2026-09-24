@@ -1,0 +1,89 @@
+/* Céus Abertos 26 — tokens extraídos da identidade visual da conferência (Link Church). */
+
+:root {
+  /* Cores base */
+  --ca-petrol-950: #0a2f39;
+  --ca-petrol-900: #0e3c46;
+  --ca-petrol-800: #124b56;
+  --ca-petrol-700: #16596a;
+  --ca-petrol-600: #1d6475;
+  --ca-teal-500: #3f8f85;
+  --ca-sage-400: #8bb88c;
+  --ca-sage-300: #a6c9a2;
+  --ca-sky-300: #86cadb;
+  --ca-cream-200: #e3dfd5;
+  --ca-cream-100: #ece8df;
+  --ca-cream-50: #f4f1ea;
+
+  /* Papéis */
+  --color-bg: var(--ca-petrol-900);
+  --color-bg-deep: var(--ca-petrol-950);
+  --color-on-dark: var(--ca-cream-100);
+  --color-on-dark-muted: rgb(236 232 223 / 0.72);
+  --color-surface: var(--ca-cream-200);
+  --color-surface-bar: var(--ca-cream-50);
+  --color-on-surface: var(--ca-petrol-700);
+  --color-on-surface-strong: var(--ca-petrol-900);
+  --color-on-surface-muted: rgb(22 89 106 / 0.72);
+  --color-accent: var(--ca-sage-400);
+  --color-accent-soft: rgb(139 184 140 / 0.22);
+  --color-field: #fbfaf6;
+  --color-field-border: rgb(22 89 106 / 0.28);
+  --color-focus: var(--ca-sky-300);
+  --color-danger: #a8402f;
+  --color-danger-soft: rgb(168 64 47 / 0.1);
+
+  /* Gradientes */
+  --gradient-hero: linear-gradient(
+    160deg,
+    var(--ca-sky-300) 0%,
+    var(--ca-teal-500) 34%,
+    var(--ca-petrol-800) 55%,
+    var(--ca-petrol-900) 78%
+  );
+  --gradient-sage: linear-gradient(135deg, var(--ca-sage-300) 0%, var(--ca-sage-400) 45%, var(--ca-teal-500) 100%);
+  --glow-teal: radial-gradient(60% 45% at 50% 38%, rgb(63 143 133 / 0.55) 0%, transparent 70%);
+
+  /* Tipografia — grotesca de tracking fechado (Inter Tight como substituta web) */
+  --font-sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  --tracking-display: -0.045em;
+  --tracking-tight: -0.03em;
+  --tracking-body: -0.01em;
+  --tracking-eyebrow: 0.18em;
+  --tracking-wide: 0.3em;
+
+  --leading-display: 0.86;
+  --leading-heading: 0.98;
+  --leading-body: 1.4;
+
+  --text-display: clamp(3.25rem, 17vw, 5.5rem);
+  --text-headline: clamp(2rem, 10vw, 3.25rem);
+  --text-title: 1.5rem;
+  --text-body: 1.0625rem;
+  --text-small: 0.9375rem;
+  --text-eyebrow: 0.75rem;
+
+  /* Espaço, forma, sombra */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-window: 2rem;
+  --radius-field: 0.875rem;
+  --radius-pill: 999px;
+
+  --shadow-window: 0 24px 60px -24px rgb(6 30 36 / 0.65);
+
+  --duration-fast: 140ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

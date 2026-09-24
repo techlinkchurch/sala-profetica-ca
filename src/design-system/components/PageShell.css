@@ -1,0 +1,44 @@
+.ds-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100dvh;
+  padding: max(var(--space-6), env(safe-area-inset-top)) var(--space-4)
+    max(var(--space-7), env(safe-area-inset-bottom));
+  background:
+    var(--glow-teal),
+    var(--gradient-hero) top / 100% 620px no-repeat,
+    var(--color-bg);
+}
+
+.ds-page-content {
+  max-width: 30rem;
+  margin-inline: auto;
+}
+
+.ds-page-decor {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.ds-page-ring {
+  position: absolute;
+  top: -9rem;
+  left: -8rem;
+  width: 17rem;
+  height: 17rem;
+  border-radius: 50%;
+  border: 2.75rem solid var(--ca-petrol-700);
+  box-shadow: inset 0 0 0 1px rgb(236 232 223 / 0.18);
+}
+
+.ds-page-chevrons {
+  position: absolute;
+  top: 2.5rem;
+  right: -2.5rem;
+  width: 11rem;
+  fill: var(--ca-sage-300);
+  opacity: 0.35;
+}

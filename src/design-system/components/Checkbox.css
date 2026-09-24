@@ -1,0 +1,38 @@
+.ds-checkbox {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-4);
+  border-radius: var(--radius-field);
+  background: var(--color-accent-soft);
+  font-size: var(--text-small);
+  line-height: 1.4;
+  color: var(--color-on-surface-strong);
+  cursor: pointer;
+}
+
+.ds-checkbox-input {
+  flex: none;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin: 0.05rem 0 0;
+  accent-color: var(--ca-petrol-700);
+  cursor: pointer;
+}
+
+.ds-checkbox-input:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.ds-checkbox-description {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: 0.875rem;
+  color: var(--color-on-surface-muted);
+}
+
+.ds-checkbox-description a {
+  color: var(--ca-petrol-700);
+  font-weight: var(--weight-bold);
+}

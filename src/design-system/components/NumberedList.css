@@ -1,0 +1,14 @@
+.ds-numbered-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+  color: var(--color-on-dark-muted);
+  font-size: var(--text-small);
+}
+
+.ds-numbered-list-number {
+  font-weight: var(--weight-black);
+  color: var(--color-on-dark);
+}

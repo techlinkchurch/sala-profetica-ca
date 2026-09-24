@@ -1,0 +1,13 @@
+.ds-eyebrow {
+  margin: 0;
+  font-size: var(--text-eyebrow);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--color-on-surface);
+}
+
+.ds-eyebrow-right {
+  text-align: right;
+}

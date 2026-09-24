@@ -1,0 +1,50 @@
+.ds-button {
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: var(--weight-black);
+  letter-spacing: var(--tracking-tight);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.ds-button:active {
+  transform: scale(0.98);
+}
+
+.ds-button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.ds-button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+  transform: none;
+}
+
+.ds-button-primary {
+  background: var(--ca-petrol-900);
+  color: var(--color-on-dark);
+}
+
+.ds-button-primary:hover:not(:disabled) {
+  background: var(--ca-petrol-800);
+}
+
+.ds-button-ghost {
+  background: transparent;
+  color: var(--ca-petrol-800);
+  box-shadow: inset 0 0 0 1.5px var(--ca-petrol-700);
+}
+
+.ds-button-ghost:hover:not(:disabled) {
+  background: rgb(22 89 106 / 0.08);
+}

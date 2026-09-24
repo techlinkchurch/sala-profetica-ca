@@ -1,0 +1,36 @@
+.ds-window {
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  border-radius: var(--radius-window);
+  box-shadow: var(--shadow-window);
+  overflow: hidden;
+}
+
+.ds-window-bar {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface-bar);
+}
+
+.ds-window-dot {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+}
+
+.ds-window-dot-sky {
+  background: var(--ca-sky-300);
+}
+
+.ds-window-dot-teal {
+  background: var(--ca-petrol-600);
+}
+
+.ds-window-dot-petrol {
+  background: var(--ca-petrol-800);
+}
+
+.ds-window-body {
+  padding: var(--space-5) var(--space-5) var(--space-6);
+}
