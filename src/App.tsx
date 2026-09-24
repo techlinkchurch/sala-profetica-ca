@@ -11,24 +11,15 @@ import {
   Window,
 } from "./design-system";
 import { inscreverNaFila, type MotivoRecusa } from "./lib/inscricao";
-import { digitosTelefone, mascararTelefone } from "./lib/telefone";
+import { mascararTelefone } from "./lib/telefone";
+import { CAMPOS, MENSAGENS, validarCampo, type Campo, type Erros } from "./lib/validacao";
 import "./App.css";
 
-type Campo = "nome" | "telefone" | "email";
-type Erros = Partial<Record<Campo, string>>;
 type Fase =
   | { tipo: "formulario" }
   | { tipo: "sucesso"; posicao: number }
   | { tipo: "ja_inscrito" }
   | { tipo: "vagas_esgotadas" };
-
-const CAMPOS: Campo[] = ["nome", "telefone", "email"];
-
-const MENSAGENS_CAMPO: Record<Campo, string> = {
-  nome: "Digite seu nome completo.",
-  telefone: "Confira o número com DDD. Ex.: (91) 99999‑9999.",
-  email: "Esse e-mail parece incompleto. Confira ou deixe em branco.",
-};
 
 const CAMPO_DO_MOTIVO: Partial<Record<MotivoRecusa, Campo>> = {
   nome_invalido: "nome",
@@ -36,15 +27,10 @@ const CAMPO_DO_MOTIVO: Partial<Record<MotivoRecusa, Campo>> = {
   email_invalido: "email",
 };
 
-const PRIVACY_URL = import.meta.env.VITE_PRIVACY_POLICY_URL as string | undefined;
+// O erro só aparece depois de uma pausa na digitação, para não piscar a cada tecla.
+const ATRASO_ERRO_MS = 600;
 
-function validarLocal(nome: string, telefone: string, email: string): Erros {
-  const erros: Erros = {};
-  if (nome.trim().length < 2) erros.nome = MENSAGENS_CAMPO.nome;
-  if (digitosTelefone(telefone).length < 10) erros.telefone = MENSAGENS_CAMPO.telefone;
-  if (email.trim() !== "" && !/^\S+@\S+\.\S+$/.test(email.trim())) erros.email = MENSAGENS_CAMPO.email;
-  return erros;
-}
+const PRIVACY_URL = import.meta.env.VITE_PRIVACY_POLICY_URL as string | undefined;
 
 export default function App() {
   const [fase, setFase] = useState<Fase>({ tipo: "formulario" });
@@ -62,15 +48,35 @@ export default function App() {
     email: useRef<HTMLInputElement>(null),
   };
 
-  function limparErro(campo: Campo) {
-    if (erros[campo]) setErros((atual) => ({ ...atual, [campo]: undefined }));
+  const timers = useRef<Partial<Record<Campo, number>>>({});
+
+  function validarAoDigitar(campo: Campo, valor: string) {
+    window.clearTimeout(timers.current[campo]);
+    const erro = validarCampo(campo, valor);
+    if (!erro) {
+      setErros((atual) => ({ ...atual, [campo]: undefined }));
+      return;
+    }
+    timers.current[campo] = window.setTimeout(
+      () => setErros((atual) => ({ ...atual, [campo]: erro })),
+      ATRASO_ERRO_MS,
+    );
+  }
+
+  function validarAoSair(campo: Campo, valor: string) {
+    if (valor.trim() === "") return;
+    window.clearTimeout(timers.current[campo]);
+    setErros((atual) => ({ ...atual, [campo]: validarCampo(campo, valor) }));
   }
 
   async function enviar(e: FormEvent) {
     e.preventDefault();
     if (enviando) return;
 
-    const locais = validarLocal(nome, telefone, email);
+    CAMPOS.forEach((c) => window.clearTimeout(timers.current[c]));
+    const valores: Record<Campo, string> = { nome, telefone, email };
+    const locais: Erros = {};
+    CAMPOS.forEach((c) => (locais[c] = validarCampo(c, valores[c])));
     setErros(locais);
     setFalhaRede(false);
     const primeiroInvalido = CAMPOS.find((c) => locais[c]);
@@ -93,7 +99,7 @@ export default function App() {
     }
     const campo = CAMPO_DO_MOTIVO[resultado.motivo];
     if (campo) {
-      setErros({ [campo]: MENSAGENS_CAMPO[campo] });
+      setErros({ [campo]: MENSAGENS[campo] });
       refs[campo].current?.focus();
       return;
     }
@@ -121,6 +127,7 @@ export default function App() {
             <TextField
               ref={refs.nome}
               label="Nome"
+              hint="Nome e sobrenome."
               name="nome"
               type="text"
               autoComplete="name"
@@ -130,8 +137,9 @@ export default function App() {
               error={erros.nome}
               onChange={(e) => {
                 setNome(e.target.value);
-                limparErro("nome");
+                validarAoDigitar("nome", e.target.value);
               }}
+              onBlur={(e) => validarAoSair("nome", e.target.value)}
             />
 
             <TextField
@@ -146,9 +154,11 @@ export default function App() {
               value={telefone}
               error={erros.telefone}
               onChange={(e) => {
-                setTelefone(mascararTelefone(e.target.value));
-                limparErro("telefone");
+                const mascarado = mascararTelefone(e.target.value);
+                setTelefone(mascarado);
+                validarAoDigitar("telefone", mascarado);
               }}
+              onBlur={(e) => validarAoSair("telefone", e.target.value)}
             />
 
             <TextField
@@ -165,8 +175,9 @@ export default function App() {
               error={erros.email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                limparErro("email");
+                validarAoDigitar("email", e.target.value);
               }}
+              onBlur={(e) => validarAoSair("email", e.target.value)}
             />
 
             <Checkbox
