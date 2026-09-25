@@ -48,6 +48,7 @@ const SITUACAO: Record<SituacaoSala, { rotulo: string; tom: "muted" | "go" | "ne
 };
 
 const SALA = "sala"; // chave de "pendente" das ações da sala inteira
+const PASSO_FILA = 10; // a fila mostra os próximos 10 e abre de 10 em 10
 
 export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, onSair }: Props) {
   const agora = useAgora();
@@ -58,6 +59,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
   const [finalizando, setFinalizando] = useState(false);
   const [gruposRascunho, setGruposRascunho] = useState<number | null>(null);
   const [saindo, setSaindo] = useState(false);
+  const [limiteFila, setLimiteFila] = useState(PASSO_FILA);
 
   const { config, papel } = estado;
   const situacao = situacaoSala(estado);
@@ -344,7 +346,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
               vazio="Ninguém aguardando na fila."
               lista
             >
-              {filtrados.aguardando.map((p) => (
+              {(buscando ? filtrados.aguardando : filtrados.aguardando.slice(0, limiteFila)).map((p) => (
                 <QueueCard
                   key={p.id}
                   compact
@@ -355,6 +357,16 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
                 />
               ))}
             </Secao>
+          )}
+          {!buscando && filtrados.aguardando.length > limiteFila && (
+            <Button variant="light" onClick={() => setLimiteFila((l) => l + PASSO_FILA)}>
+              Mostrar mais (restam {filtrados.aguardando.length - limiteFila})
+            </Button>
+          )}
+          {!buscando && limiteFila > PASSO_FILA && filtrados.aguardando.length > PASSO_FILA && (
+            <Button variant="light" onClick={() => setLimiteFila(PASSO_FILA)}>
+              Mostrar só os próximos {PASSO_FILA}
+            </Button>
           )}
         </div>
 
