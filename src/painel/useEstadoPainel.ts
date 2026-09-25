@@ -8,6 +8,14 @@ const DEBOUNCE_MS = 300; // um check-out gera várias mudanças seguidas (conclu
 
 export type Conexao = "carregando" | "ao_vivo" | "reconectando";
 
+// Diferença entre o relógio do servidor e o do aparelho. Os horários (chamado_em, entrou_em) vêm do
+// servidor; com o aparelho atrasado, o cronômetro ficaria travado em 00:00 até o atraso passar.
+let desvioRelogioMs = 0;
+
+export function agoraCorrigido(): number {
+  return Date.now() + desvioRelogioMs;
+}
+
 export function useEstadoPainel() {
   const [estado, setEstado] = useState<EstadoPainel | null>(null);
   const [semAcesso, setSemAcesso] = useState(false);
@@ -20,7 +28,13 @@ export function useEstadoPainel() {
 
   const atualizar = useCallback(async () => {
     const minha = ++ultimaPedida.current;
+    const antes = Date.now();
     const r = await api.estado();
+    const depois = Date.now();
+    if (r?.ok && r.agora) {
+      const servidor = Date.parse(r.agora);
+      if (Number.isFinite(servidor)) desvioRelogioMs = servidor - (antes + depois) / 2;
+    }
     // Respostas fora de ordem (rede lenta) não podem sobrescrever um estado mais novo.
     if (minha < ultimaAplicada.current) return;
     ultimaAplicada.current = minha;
@@ -35,7 +49,7 @@ export function useEstadoPainel() {
     }
     setSemAcesso(false);
     setEstado(r);
-    setAtualizadoEm(Date.now());
+    setAtualizadoEm(agoraCorrigido());
   }, []);
 
   // Primeira carga + polling + retomada quando a aba volta ou a rede volta.
@@ -91,9 +105,9 @@ export function useEstadoPainel() {
 
 /** Relógio compartilhado: um único intervalo de 1s para todos os semáforos. */
 export function useAgora(intervaloMs = 1000): number {
-  const [agora, setAgora] = useState(() => Date.now());
+  const [agora, setAgora] = useState(agoraCorrigido);
   useEffect(() => {
-    const id = window.setInterval(() => setAgora(Date.now()), intervaloMs);
+    const id = window.setInterval(() => setAgora(agoraCorrigido()), intervaloMs);
     return () => window.clearInterval(id);
   }, [intervaloMs]);
   return agora;

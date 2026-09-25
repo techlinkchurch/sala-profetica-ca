@@ -39,6 +39,7 @@ export type ConfigSala = {
 export type EstadoPainel = {
   ok: true;
   dia: string; // "YYYY-MM-DD", hoje no fuso de Belém
+  agora: string; // ISO, relógio do servidor: corrige o relógio do aparelho nos cronômetros
   papel: Papel;
   sessao: SessaoSala | null; // null = sala ainda não iniciada hoje
   config: ConfigSala;
