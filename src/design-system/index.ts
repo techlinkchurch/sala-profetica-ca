@@ -16,6 +16,7 @@ export { PageShell } from "./components/PageShell";
 export { Pagination } from "./components/Pagination";
 export { Prose } from "./components/Prose";
 export { QueueCard } from "./components/QueueCard";
+export { RosterList, type RosterItem } from "./components/RosterList";
 export { SearchField } from "./components/SearchField";
 export { Stat } from "./components/Stat";
 export { StatusBadge, type BadgeTone } from "./components/StatusBadge";
