@@ -219,8 +219,8 @@ export default function App() {
             <Eyebrow>Você está na fila!</Eyebrow>
             <Stat label="Posição" value={`#${fase.posicao}`} />
             <p>
-              Salve seu ingresso: ele é a confirmação da sua inscrição. Na entrada, a equipe confere pelo seu
-              e-mail.
+              A confirmação chega no seu WhatsApp em instantes. Salve também seu ingresso: na entrada, a equipe
+              confere pelo seu e-mail.
             </p>
             <p>
               Quando chegar a mensagem avisando que é <strong>a sua vez</strong>, você terá{" "}

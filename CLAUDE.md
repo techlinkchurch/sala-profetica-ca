@@ -60,8 +60,8 @@ Fonte da verdade: `src/painel/contrato.ts` (tipos + descrição de cada RPC). Re
 
 **Disparo de WhatsApp (não quebrar):**
 - Database Webhook `disparo_templates_fila` (Dashboard → Integrations → Database Webhooks) em INSERT e UPDATE de `fila_sala_profetica` chama a Edge Function `enviar-template-fila`, com o header `x-internal-secret`.
-- `enviar-template-fila` (verify_jwt=false; código em `supabase/functions/enviar-template-fila/`): no INSERT com `aguardando`, envia a confirmação, **hoje desligada** pela constante `CONFIRMACAO_ATIVA = false` até a Meta aprovar `boas_vindas_sala_profetica`. Para religar: aprovar o template, apontar `TEMPLATES.confirmacao` para ele, trocar a constante para `true`, fazer o deploy e voltar o texto da tela de sucesso ("A confirmação chega no seu WhatsApp em instantes"); no UPDATE para `chamado` (vindo de outro status), envia a chamada. Sucesso grava `ultimo_wamid`; erro marca `falha_envio`. Os templates ficam no mapa `TEMPLATES` do código. Hoje os dois apontam para `sua_vez_chegou_sala_profetica` (pt_BR, parâmetro nomeado `nome`) até a Meta aprovar `boas_vindas_sala_profetica`.
-- `whatsapp-webhook` (verify_jwt=false): recebe os eventos de status da Meta (sent, delivered, read, failed) e marca `falha_envio` pelo `ultimo_wamid`. Ignora mensagens recebidas (fora do escopo da v1).
+- `enviar-template-fila` (verify_jwt=false; código em `supabase/functions/enviar-template-fila/`): no INSERT com `aguardando`, envia a confirmação (`boas_vindas_sala_profetica`, ligada com `CONFIRMACAO_ATIVA = true`); no UPDATE para `chamado` (vindo de outro status), envia a chamada (`sua_vez_chegou_sala_profetica`). Os dois templates são pt_BR com o parâmetro nomeado `nome` (mapa `TEMPLATES`). Sucesso grava `ultimo_wamid` e limpa `ultimo_erro`. Falha na **chamada** marca `falha_envio` + `ultimo_erro`; falha na **confirmação** só grava `ultimo_erro` e a pessoa **continua `aguardando`** na fila.
+- `whatsapp-webhook` (verify_jwt=false; código em `supabase/functions/whatsapp-webhook/`): recebe os eventos de status da Meta (sent, delivered, read, failed). Em `failed`, pelo `ultimo_wamid`: linha `chamado` vira `falha_envio`; linha `aguardando` (confirmação) só recebe `ultimo_erro`. Ignora mensagens recebidas (fora do escopo da v1).
 - Secrets das Edge Functions (só os **nomes**, os valores nunca aparecem aqui): `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_APP_SECRET`, `WHATSAPP_VERIFY_TOKEN`, `INTERNAL_TRIGGER_SECRET`.
 - O front **nunca** chama a API do WhatsApp nem as Edge Functions. O disparo acontece sozinho a partir do banco.
 
@@ -150,7 +150,7 @@ Mobile-first: praticamente todo mundo vai abrir pelo celular, lendo o QR Code no
    - Checkbox de LGPD **desmarcado por padrão**, com um texto como: "Aceito receber comunicações da Link Church sobre eventos futuros pelo WhatsApp ou e-mail." Sem marcar, o número e o e-mail só são usados para a Sala Profética daquele dia.
    - Link para a Política de Privacidade: `/privacidade/` (página deste mesmo projeto, em `privacidade/index.html` + `src/privacidade/`).
    - Botão desabilitado enquanto envia, para evitar clique duplo.
-2. **Sucesso** (`ok: true`): "Você está na fila! Posição #N." Enquanto a confirmação por WhatsApp estiver desligada, pedir um print da tela como comprovante e avisar que a mensagem no WhatsApp chega quando for a vez.
+2. **Sucesso** (`ok: true`): "Você está na fila! Posição #N." Avisar que a confirmação chega no WhatsApp em instantes, oferecer o ingresso (imagem com nome/e-mail) e avisar que outra mensagem chega quando for a vez.
 3. **Recusas** (`src/TelaRecusa.tsx`), sempre em tom amigável:
    - `ja_inscrito`: "Você já está na fila de hoje com esse número."
    - `ja_participou`: já foi atendido em outro dia; cada pessoa participa uma vez; se achar que é engano, fala com a staff.
@@ -170,4 +170,4 @@ Mobile-first: praticamente todo mundo vai abrir pelo celular, lendo o QR Code no
 ## Limitações conhecidas
 
 - O mesmo celular digitado com e sem o 9º dígito (`91 98113-4890` e `91 8113-4890`) gera dois contatos diferentes. A mensagem chega nos dois casos. Fica para uma versão futura.
-- O template de confirmação ainda não foi aprovado pela Meta, então o envio da confirmação está desligado (`CONFIRMACAO_ATIVA = false`). Só a mensagem de chamada ("SUA VEZ CHEGOU!") é enviada.
+- Se a Meta mudar os parâmetros de um template (ex.: `boas_vindas_sala_profetica` sem `{{nome}}`), o envio falha com erro de parâmetro; ver `ultimo_erro` na fila e ajustar o `graphPayload` em `enviar-template-fila`.
