@@ -91,6 +91,16 @@ VITE_SUPABASE_PUBLISHABLE_KEY=   # Supabase Dashboard → Project Settings → A
 - **Nunca** colocar no front: `service_role`/secret key, token do WhatsApp, App Secret da Meta ou qualquer outro segredo. Qualquer variável `VITE_*` vai parar no bundle público.
 - Nunca imprimir nem pedir segredos no chat. Quem gera e cola os valores é o Diogo.
 
+## Deploy na Vercel (SPC-11)
+
+Configuração em `vercel.json`: build do Vite multi-página (`/`, `/privacidade/`, `/painel/`), redirect de `/painel` e `/privacidade` para a versão com barra, headers de segurança (CSP que só libera o Supabase do projeto e as fontes do Google, sem iframe, HSTS) e `noindex` + `no-store` no painel.
+
+1. Vercel → **Add New → Project** → importar `techlinkchurch/sala-profetica-ca` (branch `main`). Framework e comandos já vêm do `vercel.json`.
+2. **Settings → Environment Variables** (Production e Preview): `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` (a chave publishable, a mesma do `.env.local`). Sem elas o build falha de propósito (`vite.config.ts`).
+3. Deploy. Conferir `/`, `/privacidade/` e `/painel/`.
+4. Se mudar o projeto do Supabase ou usar outro domínio de API, atualizar o `connect-src` da CSP no `vercel.json`.
+5. Gerar o QR Code do culto apontando para a URL de produção (`/`).
+
 ## Contrato da RPC `inscrever_na_fila`
 
 ```ts
