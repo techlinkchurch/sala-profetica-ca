@@ -246,17 +246,72 @@
 
 /* ---------- Seções ---------- */
 
-.painel-grade {
-  display: grid;
-  gap: var(--space-5);
-  margin-top: var(--space-3);
+/* Kanban: Aguardando → Chamados → Em atendimento → Concluídos. No celular e no tablet as
+   colunas rolam para o lado com encaixe (como o Trello); no notebook ficam lado a lado. */
+.painel-kanban {
+  display: flex;
+  gap: var(--space-3);
+  margin: var(--space-3) calc(-1 * var(--space-4)) 0;
+  padding: 0 var(--space-4) var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--space-4);
+  align-items: start;
 }
 
 .painel-coluna {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
   min-width: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  background: rgb(10 47 57 / 0.45);
+  box-shadow: inset 0 0 0 1px rgb(236 232 223 / 0.08);
+}
+
+.painel-kanban > .painel-coluna {
+  flex: 0 0 min(86vw, 22rem);
+  scroll-snap-align: start;
+}
+
+.painel-coluna .painel-cards {
+  grid-template-columns: 1fr;
+}
+
+/* Falha de envio vem depois dos Chamados (o destaque vermelho já chama atenção). */
+.painel-coluna > .painel-secao-stop {
+  order: 1;
+}
+
+/* Nas colunas estreitas o telefone some das listas; a busca por telefone continua funcionando. */
+.painel-coluna .ds-roster-meta {
+  display: none;
+}
+
+/* Cards compactos nas colunas estreitas do kanban. */
+.painel-coluna .ds-qcard {
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.painel-coluna .ds-qcard-title {
+  font-size: 1.0625rem;
+}
+
+.painel-coluna .ds-qcard-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.painel-coluna .ds-qcard-actions > .ds-button {
+  min-width: 0;
+  padding: 0 var(--space-2);
+  font-size: 0.875rem;
+}
+
+.painel-coluna .ds-qcard-actions > .ds-button:only-child {
+  grid-column: 1 / -1;
 }
 
 .painel-paginacao {
@@ -291,11 +346,6 @@
     min-width: 2.75rem;
     height: 2.75rem;
   }
-}
-
-/* No celular (uma coluna) as ações vêm antes da fila, que pode ter até 50 pessoas. */
-.painel-coluna-fila {
-  order: 2;
 }
 
 .painel-secao {
@@ -336,6 +386,10 @@
 
 .painel-secao-teal .painel-secao-marcador {
   background: var(--ca-sage-300);
+}
+
+.painel-secao-go .painel-secao-marcador {
+  background: var(--signal-go);
 }
 
 .painel-secao-quantidade {
@@ -586,13 +640,18 @@
   }
 }
 
-@media (min-width: 60rem) {
-  .painel-grade {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    align-items: start;
+/* Notebook: as 4 colunas cabem lado a lado, sem rolagem lateral. */
+@media (min-width: 70rem) {
+  .painel-kanban {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+    scroll-snap-type: none;
   }
 
-  .painel-coluna-fila {
-    order: 0;
+  .painel-kanban > .painel-coluna {
+    flex: none;
   }
 }

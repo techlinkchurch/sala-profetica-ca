@@ -52,6 +52,20 @@ const SITUACAO: Record<SituacaoSala, { rotulo: string; tom: "muted" | "go" | "ne
 const SALA = "sala"; // chave de "pendente" das ações da sala inteira
 const POR_PAGINA_FILA = 10;
 
+// O e-mail é o identificador do ingresso: em coluna estreita ele quebra antes do "@", nunca é cortado.
+function emailQuebravel(email: string | null) {
+  if (!email) return "sem e-mail";
+  const arroba = email.indexOf("@");
+  if (arroba <= 0) return email;
+  return (
+    <>
+      {email.slice(0, arroba)}
+      <wbr />
+      {email.slice(arroba)}
+    </>
+  );
+}
+
 export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, onSair }: Props) {
   const agora = useAgora();
   const [busca, setBusca] = useState("");
@@ -200,8 +214,9 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
           variant="ghost"
           disabled={ocupado}
           onClick={() => setConfirmacao({ tipo: "nao_compareceu", pessoa: p })}
+          aria-label={`Marcar ${p.nome} como não compareceu`}
         >
-          Não compareceu
+          Não veio
         </Button>
       </>
     );
@@ -348,9 +363,9 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
         />
       </div>
 
-      <div className="painel-grade">
-        <div className="painel-coluna painel-coluna-fila">
-          {(!buscando || filtrados.aguardando.length > 0) && (
+      <div className="painel-kanban">
+        <div className="painel-coluna" aria-label="Aguardando">
+          {(
             <Secao
               titulo="Aguardando"
               quantidade={filtrados.aguardando.length}
@@ -401,7 +416,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
           )}
         </div>
 
-        <div className="painel-coluna">
+        <div className="painel-coluna" aria-label="Chamados">
           {(filtrados.falha_envio.length > 0 || (!buscando && grupos.falha_envio.length > 0)) && (
             <Secao
               titulo="Falha de envio"
@@ -414,7 +429,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
                   key={p.id}
                   tone="stop"
                   title={p.nome}
-                  subtitle={p.email ?? "sem e-mail"}
+                  subtitle={emailQuebravel(p.email)}
                   meta={contato(p, p.chamado_em ? `chamado às ${formatarHora(p.chamado_em)}` : undefined)}
                   aside={<StatusBadge tone="stop">Não enviado</StatusBadge>}
                   note={<>Erro: {p.ultimo_erro?.trim() || "o WhatsApp recusou o envio, sem detalhe."}</>}
@@ -424,7 +439,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
             </Secao>
           )}
 
-          {(!buscando || filtrados.chamado.length > 0) && (
+          {(
             <Secao
               titulo="Chamados"
               quantidade={filtrados.chamado.length}
@@ -444,7 +459,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
                     key={p.id}
                     tone={tom === "neutral" ? "default" : tom}
                     title={p.nome}
-                    subtitle={p.email ?? "sem e-mail"}
+                    subtitle={emailQuebravel(p.email)}
                     meta={contato(p, p.chamado_em ? `chamado às ${formatarHora(p.chamado_em)}` : undefined)}
                     aside={
                       p.chamado_em ? (
@@ -464,7 +479,10 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
             </Secao>
           )}
 
-          {(!buscando || filtrados.em_atendimento.length > 0) && (
+        </div>
+
+        <div className="painel-coluna" aria-label="Em atendimento">
+          {(
             <Secao
               titulo="Em atendimento"
               quantidade={filtrados.em_atendimento.length}
@@ -477,7 +495,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
                   <QueueCard
                     key={p.id}
                     title={p.nome}
-                    subtitle={p.email ?? "sem e-mail"}
+                    subtitle={emailQuebravel(p.email)}
                     meta={contato(p, p.entrou_em ? `entrou às ${formatarHora(p.entrou_em)}` : undefined)}
                     aside={
                       p.entrou_em ? (
@@ -495,25 +513,21 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
             </Secao>
           )}
 
-          {(!buscando || filtrados.concluido.length > 0) && (
-            <Collapsible
-              title="Concluídos"
-              count={filtrados.concluido.length}
-              forceOpen={buscando && filtrados.concluido.length > 0}
-              onDark
-            >
-              <ListaSimples
-                vazio="Ninguém concluiu ainda."
-                pessoas={filtrados.concluido}
-                detalhe={(p) =>
-                  p.entrou_em && p.saiu_em
-                    ? `${formatarHora(p.entrou_em)}–${formatarHora(p.saiu_em)}`
-                    : formatarHora(p.saiu_em)
-                }
-                tom="go"
-              />
-            </Collapsible>
-          )}
+        </div>
+
+        <div className="painel-coluna" aria-label="Concluídos">
+          <Secao titulo="Concluídos" quantidade={filtrados.concluido.length} tom="go" vazio="Ninguém concluiu ainda." lista>
+            <ListaSimples
+              vazio="Ninguém concluiu ainda."
+              pessoas={filtrados.concluido}
+              detalhe={(p) =>
+                p.entrou_em && p.saiu_em
+                  ? `${formatarHora(p.entrou_em)}–${formatarHora(p.saiu_em)}`
+                  : formatarHora(p.saiu_em)
+              }
+              tom="go"
+            />
+          </Secao>
 
           {(!buscando || filtrados.nao_compareceu.length > 0) && (
             <Collapsible
@@ -628,7 +642,7 @@ function Secao({
 }: {
   titulo: string;
   quantidade: number;
-  tom: "wait" | "stop" | "teal" | "info";
+  tom: "wait" | "stop" | "teal" | "info" | "go";
   descricao?: string;
   vazio?: string;
   lista?: boolean;
