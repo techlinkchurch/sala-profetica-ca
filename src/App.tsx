@@ -157,7 +157,7 @@ export default function App() {
             <TextField
               ref={refs.telefone}
               label="WhatsApp"
-              hint="Com DDD. É por aqui que a gente te chama."
+              hint="Use o número do seu WhatsApp, com DDD: é por ele que a gente te chama. Na dúvida, abra o WhatsApp, vá em Configurações e toque na sua foto para ver o número."
               name="telefone"
               type="tel"
               inputMode="tel"
