@@ -31,11 +31,13 @@ Stack: React + Vite. Cliente: `@supabase/supabase-js` v2. Backend: Supabase (pro
 - `dias_sala_profetica`: dia (PK), abre_as (time, horário de Belém), eh_teste (boolean). São os dias que aceitam inscrição: sexta 25/09 a partir de 00:00 e sábado 26/09 a partir de 08:50. Os dias reais (`eh_teste = false`) definem o escopo da regra "uma participação por conferência". Dias com `eh_teste = true` (hoje, 24/09) aceitam inscrição de verdade, com WhatsApp, mas não bloqueiam nem são bloqueados pela regra. Só a equipe lê e altera; o público não acessa.
 - `staff_members`: user_id → auth.users, `papel` (`coordenador` | `admin`, default `coordenador`), `nome`, criado_em. Cada autenticado só lê a própria linha; ninguém escreve pela API (cadastro da equipe é pelo Dashboard/SQL).
 - `sessoes_sala`: dia (PK), iniciada_em/por, finalizada_em/por → auth.users. Uma sessão por dia, criada/encerrada só pelas RPCs do painel. Staff lê (RLS `is_staff()`), ninguém escreve direto. Está na publicação `supabase_realtime` (junto com `fila_sala_profetica`).
+- `avaliacoes_sala` (SPC-12): avaliação pública pós-sala. id, criado_em, dia_evento (Belém), palavra (`sim|nao|quero_contar`), gostou_formato (`sim|mais_ou_menos|nao`), testemunho (≤ 2000), autoriza_compartilhar, nome (≤ 120), contato (`+55...` ou null). Grava só pela RPC `enviar_avaliacao`; só staff lê (`is_staff()`); anon sem grant nenhum. Sem webhook (não manda WhatsApp) e fora do realtime. Para ler: `select * from avaliacoes_sala order by criado_em desc`.
 
 **Policies:** o público (`anon`) só lê `config_sala`. Os usuários autenticados (equipe) leem e alteram contatos, fila e config. **Não existe INSERT público direto** nas tabelas: foi removido de propósito, e o cadastro passa só pela RPC.
 
 **Funções SQL:**
 - `inscrever_na_fila(...)`: security definer, executável por `anon`. É a única entrada do formulário (contrato abaixo). O aviso do Supabase Advisor sobre ela ser pública é esperado.
+- `enviar_avaliacao(p_palavra, p_gostou_formato, p_testemunho, p_autoriza_compartilhar, p_nome, p_contato)` (SPC-12): security definer, executável por `anon`; contrato em `src/lib/avaliacao.ts`. Retorna `{ok:true}` ou `{ok:false, motivo: resposta_invalida | texto_longo | contato_invalido}`. Normaliza o contato como `inscrever_na_fila`, zera `autoriza_compartilhar` sem testemunho e recusa (`resposta_invalida`) acima de 500 envios em 10 min. Aviso do Advisor esperado.
 - `is_staff()`: security definer, usada nas policies da equipe.
 - `rls_auto_enable()`: origem desconhecida e executável pelo público. **Não mexer** sem confirmar com o Diogo.
 - `painel_*` (SPC-7): RPCs do painel, security definer, só `authenticated` executa, e todas começam checando `is_staff()`. Ver "Contrato das RPCs do painel".
