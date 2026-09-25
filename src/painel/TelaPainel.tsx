@@ -8,6 +8,7 @@ import {
   ElapsedTimer,
   Modal,
   PageShell,
+  Pagination,
   QueueCard,
   SearchField,
   StatusBadge,
@@ -48,7 +49,7 @@ const SITUACAO: Record<SituacaoSala, { rotulo: string; tom: "muted" | "go" | "ne
 };
 
 const SALA = "sala"; // chave de "pendente" das ações da sala inteira
-const PASSO_FILA = 10; // a fila mostra os próximos 10 e abre de 10 em 10
+const POR_PAGINA_FILA = 10;
 
 export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, onSair }: Props) {
   const agora = useAgora();
@@ -59,7 +60,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
   const [finalizando, setFinalizando] = useState(false);
   const [gruposRascunho, setGruposRascunho] = useState<number | null>(null);
   const [saindo, setSaindo] = useState(false);
-  const [limiteFila, setLimiteFila] = useState(PASSO_FILA);
+  const [paginaFila, setPaginaFila] = useState(1);
 
   const { config, papel } = estado;
   const situacao = situacaoSala(estado);
@@ -71,6 +72,14 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
   const buscando = busca.trim().length > 0;
   const totalEncontrado = buscando ? estado.fila.filter((p) => combinaBusca(p, busca)).length : 0;
   const amareloMin = Math.min(5, config.tempo_limite_min);
+
+  const paginasFila = Math.max(1, Math.ceil(filtrados.aguardando.length / POR_PAGINA_FILA));
+  // A fila anda e a busca muda: a página atual nunca pode passar da última.
+  const paginaFilaAtual = Math.min(paginaFila, paginasFila);
+  const filaDaPagina = filtrados.aguardando.slice(
+    (paginaFilaAtual - 1) * POR_PAGINA_FILA,
+    paginaFilaAtual * POR_PAGINA_FILA,
+  );
 
   // Avisos de sucesso somem sozinhos; erros ficam até a pessoa fechar ou fazer outra ação.
   useEffect(() => {
@@ -323,7 +332,10 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
           label="Buscar por e-mail, nome ou telefone"
           placeholder="E-mail do ingresso, nome ou telefone"
           value={busca}
-          onChange={setBusca}
+          onChange={(valor) => {
+            setBusca(valor);
+            setPaginaFila(1);
+          }}
           onDark
           status={
             buscando
@@ -346,7 +358,7 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
               vazio="Ninguém aguardando na fila."
               lista
             >
-              {(buscando ? filtrados.aguardando : filtrados.aguardando.slice(0, limiteFila)).map((p) => (
+              {filaDaPagina.map((p) => (
                 <QueueCard
                   key={p.id}
                   compact
@@ -358,15 +370,21 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
               ))}
             </Secao>
           )}
-          {!buscando && filtrados.aguardando.length > limiteFila && (
-            <Button variant="light" onClick={() => setLimiteFila((l) => l + PASSO_FILA)}>
-              Mostrar mais (restam {filtrados.aguardando.length - limiteFila})
-            </Button>
-          )}
-          {!buscando && limiteFila > PASSO_FILA && filtrados.aguardando.length > PASSO_FILA && (
-            <Button variant="light" onClick={() => setLimiteFila(PASSO_FILA)}>
-              Mostrar só os próximos {PASSO_FILA}
-            </Button>
+          {paginasFila > 1 && (
+            <div className="painel-paginacao">
+              <p className="painel-paginacao-resumo">
+                {(paginaFilaAtual - 1) * POR_PAGINA_FILA + 1}–
+                {Math.min(paginaFilaAtual * POR_PAGINA_FILA, filtrados.aguardando.length)} de{" "}
+                {filtrados.aguardando.length}
+              </p>
+              <Pagination
+                page={paginaFilaAtual}
+                pageCount={paginasFila}
+                onChange={setPaginaFila}
+                label="Páginas da fila de aguardando"
+                onDark
+              />
+            </div>
           )}
         </div>
 
