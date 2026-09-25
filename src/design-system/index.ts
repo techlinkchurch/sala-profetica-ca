@@ -13,6 +13,7 @@ export { Modal } from "./components/Modal";
 export { NumberedList } from "./components/NumberedList";
 export { NumberedSection } from "./components/NumberedSection";
 export { PageShell } from "./components/PageShell";
+export { Pagination } from "./components/Pagination";
 export { Prose } from "./components/Prose";
 export { QueueCard } from "./components/QueueCard";
 export { SearchField } from "./components/SearchField";
