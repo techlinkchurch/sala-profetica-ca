@@ -6,7 +6,8 @@
   "outputDirectory": "dist",
   "redirects": [
     { "source": "/painel", "destination": "/painel/", "permanent": true },
-    { "source": "/privacidade", "destination": "/privacidade/", "permanent": true }
+    { "source": "/privacidade", "destination": "/privacidade/", "permanent": true },
+    { "source": "/avaliacao", "destination": "/avaliacao/", "permanent": true }
   ],
   "headers": [
     {

@@ -22,6 +22,7 @@ export default defineConfig(({ command, mode }) => {
           cadastro: resolve(import.meta.dirname, "index.html"),
           privacidade: resolve(import.meta.dirname, "privacidade/index.html"),
           painel: resolve(import.meta.dirname, "painel/index.html"),
+          avaliacao: resolve(import.meta.dirname, "avaliacao/index.html"),
         },
       },
     },
