@@ -10,6 +10,7 @@ import {
   PageShell,
   Pagination,
   QueueCard,
+  RosterList,
   SearchField,
   StatusBadge,
   Stepper,
@@ -358,33 +359,36 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
               vazio="Ninguém aguardando na fila."
               lista
             >
-              {filaDaPagina.map((p) => (
-                <QueueCard
-                  key={p.id}
-                  compact
-                  leading={p.posicao !== null ? `${p.posicao}º` : "–"}
-                  title={p.nome}
-                  subtitle={p.email ?? "sem e-mail"}
-                  meta={contato(p, `inscrito às ${formatarHora(p.criado_em)}`)}
-                />
-              ))}
-            </Secao>
-          )}
-          {paginasFila > 1 && (
-            <div className="painel-paginacao">
-              <p className="painel-paginacao-resumo">
-                {(paginaFilaAtual - 1) * POR_PAGINA_FILA + 1}–
-                {Math.min(paginaFilaAtual * POR_PAGINA_FILA, filtrados.aguardando.length)} de{" "}
-                {filtrados.aguardando.length}
-              </p>
-              <Pagination
-                page={paginaFilaAtual}
-                pageCount={paginasFila}
-                onChange={setPaginaFila}
-                label="Páginas da fila de aguardando"
-                onDark
+              <RosterList
+                label="Fila de aguardando"
+                items={filaDaPagina.map((p) => ({
+                  key: p.id,
+                  leading: p.posicao !== null ? `${p.posicao}º` : "–",
+                  title: p.nome,
+                  subtitle: `${p.email ?? "sem e-mail"} · ${formatarTelefone(p.telefone)}`,
+                  trailing: formatarHora(p.criado_em),
+                  // os próximos a serem chamados, quando a vaga abrir
+                  highlight: !buscando && p.posicao !== null && p.posicao <= Math.max(1, config.grupos_ativos),
+                }))}
+                footer={
+                  paginasFila > 1 ? (
+                    <div className="painel-paginacao">
+                      <span className="painel-paginacao-resumo">
+                        {(paginaFilaAtual - 1) * POR_PAGINA_FILA + 1}–
+                        {Math.min(paginaFilaAtual * POR_PAGINA_FILA, filtrados.aguardando.length)} de{" "}
+                        {filtrados.aguardando.length}
+                      </span>
+                      <Pagination
+                        page={paginaFilaAtual}
+                        pageCount={paginasFila}
+                        onChange={setPaginaFila}
+                        label="Páginas da fila de aguardando"
+                      />
+                    </div>
+                  ) : undefined
+                }
               />
-            </div>
+            </Secao>
           )}
         </div>
 
@@ -653,23 +657,15 @@ function ListaSimples({
 }) {
   if (pessoas.length === 0) return <p className="painel-secao-vazio">{vazio}</p>;
   return (
-    <div className="painel-lista">
-      {pessoas.map((p) => (
-        <QueueCard
-          key={p.id}
-          compact
-          tone={tom}
-          title={p.nome}
-          subtitle={p.email ?? "sem e-mail"}
-          meta={
-            <>
-              {formatarTelefone(p.telefone)}
-              {detalhe(p) ? ` · ${detalhe(p)}` : ""}
-            </>
-          }
-        />
-      ))}
-    </div>
+    <RosterList
+      label={tom === "go" ? "Concluídos" : "Não compareceram"}
+      items={pessoas.map((p) => ({
+        key: p.id,
+        title: p.nome,
+        subtitle: `${p.email ?? "sem e-mail"} · ${formatarTelefone(p.telefone)}`,
+        trailing: detalhe(p) || undefined,
+      }))}
+    />
   );
 }
 

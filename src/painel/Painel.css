@@ -261,15 +261,26 @@
 
 .painel-paginacao {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-2);
 }
 
 .painel-paginacao-resumo {
-  margin: 0;
   font-size: var(--text-small);
-  color: var(--color-on-dark-muted);
+  color: var(--color-on-surface-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.painel-paginacao .ds-pagination {
+  gap: var(--space-1);
+}
+
+.painel-paginacao .ds-pagination-page,
+.painel-paginacao .ds-pagination-nav {
+  min-width: 2.25rem;
+  height: 2.25rem;
 }
 
 /* No celular (uma coluna) as ações vêm antes da fila, que pode ter até 50 pessoas. */
