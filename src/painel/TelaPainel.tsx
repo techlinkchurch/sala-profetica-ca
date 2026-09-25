@@ -334,6 +334,30 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
       </div>
 
       <div className="painel-grade">
+        <div className="painel-coluna painel-coluna-fila">
+          {(!buscando || filtrados.aguardando.length > 0) && (
+            <Secao
+              titulo="Aguardando"
+              quantidade={filtrados.aguardando.length}
+              tom="info"
+              descricao="São chamados em ordem, automaticamente, quando uma vaga abre."
+              vazio="Ninguém aguardando na fila."
+              lista
+            >
+              {filtrados.aguardando.map((p) => (
+                <QueueCard
+                  key={p.id}
+                  compact
+                  leading={p.posicao !== null ? `${p.posicao}º` : "–"}
+                  title={p.nome}
+                  subtitle={p.email ?? "sem e-mail"}
+                  meta={contato(p, `inscrito às ${formatarHora(p.criado_em)}`)}
+                />
+              ))}
+            </Secao>
+          )}
+        </div>
+
         <div className="painel-coluna">
           {(filtrados.falha_envio.length > 0 || (!buscando && grupos.falha_envio.length > 0)) && (
             <Secao
@@ -425,30 +449,6 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
                   />
                 );
               })}
-            </Secao>
-          )}
-        </div>
-
-        <div className="painel-coluna">
-          {(!buscando || filtrados.aguardando.length > 0) && (
-            <Secao
-              titulo="Aguardando"
-              quantidade={filtrados.aguardando.length}
-              tom="info"
-              descricao="São chamados em ordem, automaticamente, quando uma vaga abre."
-              vazio="Ninguém aguardando na fila."
-              lista
-            >
-              {filtrados.aguardando.map((p) => (
-                <QueueCard
-                  key={p.id}
-                  compact
-                  leading={p.posicao !== null ? `${p.posicao}º` : "–"}
-                  title={p.nome}
-                  subtitle={p.email ?? "sem e-mail"}
-                  meta={contato(p, `inscrito às ${formatarHora(p.criado_em)}`)}
-                />
-              ))}
             </Secao>
           )}
 

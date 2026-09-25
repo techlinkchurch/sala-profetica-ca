@@ -259,6 +259,11 @@
   min-width: 0;
 }
 
+/* No celular (uma coluna) as ações vêm antes da fila, que pode ter até 50 pessoas. */
+.painel-coluna-fila {
+  order: 2;
+}
+
 .painel-secao {
   display: flex;
   flex-direction: column;
@@ -549,7 +554,11 @@
 
 @media (min-width: 60rem) {
   .painel-grade {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
     align-items: start;
+  }
+
+  .painel-coluna-fila {
+    order: 0;
   }
 }
