@@ -1,0 +1,21 @@
+.ds-textarea {
+  height: auto;
+  min-height: 8rem;
+  padding: var(--space-3) var(--space-4);
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.ds-textarea-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.ds-textarea-contador {
+  flex: none;
+  font-size: 0.8125rem;
+  color: var(--color-on-surface-muted);
+  font-variant-numeric: tabular-nums;
+}
