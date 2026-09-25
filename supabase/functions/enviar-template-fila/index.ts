@@ -17,15 +17,11 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 
 const GRAPH_API_VERSION = "v26.0";
 
-// Desligado até a Meta aprovar o template de confirmação: hoje ele aponta para o de chamada,
-// e a pessoa receberia "SUA VEZ CHEGOU!" logo ao se cadastrar. A chamada de vez continua ativa.
-const CONFIRMACAO_ATIVA = false;
+// Confirmação de cadastro ligada: a Meta aprovou o template boas_vindas_sala_profetica.
+const CONFIRMACAO_ATIVA = true;
 
-// Enquanto o template de confirmação ainda está em análise na Meta, os dois eventos
-// usam o mesmo template já aprovado. Trocar aqui assim que o outro for aprovado —
-// nenhum outro código precisa mudar.
 const TEMPLATES: Record<string, { name: string; language: string }> = {
-  confirmacao: { name: "sua_vez_chegou_sala_profetica", language: "pt_BR" },
+  confirmacao: { name: "boas_vindas_sala_profetica", language: "pt_BR" },
   chamada: { name: "sua_vez_chegou_sala_profetica", language: "pt_BR" },
 };
 
@@ -49,14 +45,17 @@ interface DatabaseWebhookPayload {
   old_record: { id: string; status: string } | null;
 }
 
-async function marcarFalhaEnvio(filaId: string, motivo: string) {
-  console.error("falha ao enviar template", { filaId, motivo });
-  const { error } = await supabase
-    .from("fila_sala_profetica")
-    .update({ status: "falha_envio" })
-    .eq("id", filaId)
-    .in("status", ["aguardando", "chamado"]);
-  if (error) console.error("erro ao marcar falha_envio", error);
+// Falha na chamada: vira falha_envio (o painel destaca e a vaga não fica travada).
+// Falha na confirmação: a pessoa continua aguardando na fila; só o erro fica registrado.
+async function marcarFalhaEnvio(filaId: string, motivo: string, tipo: "confirmacao" | "chamada") {
+  console.error("falha ao enviar template", { filaId, tipo, motivo });
+  const ultimo_erro = `${tipo === "confirmacao" ? "Confirmação" : "Chamada"}: ${motivo}`.slice(0, 500);
+  const query =
+    tipo === "chamada"
+      ? supabase.from("fila_sala_profetica").update({ status: "falha_envio", ultimo_erro }).eq("id", filaId).eq("status", "chamado")
+      : supabase.from("fila_sala_profetica").update({ ultimo_erro }).eq("id", filaId);
+  const { error } = await query;
+  if (error) console.error("erro ao registrar falha de envio", error);
 }
 
 async function enviarTemplate(filaId: string, tipo: "confirmacao" | "chamada") {
@@ -72,7 +71,7 @@ async function enviarTemplate(filaId: string, tipo: "confirmacao" | "chamada") {
   }
 
   if (!WHATSAPP_ACCESS_TOKEN || !WHATSAPP_PHONE_NUMBER_ID) {
-    await marcarFalhaEnvio(filaId, "credenciais do WhatsApp nao configuradas");
+    await marcarFalhaEnvio(filaId, "credenciais do WhatsApp nao configuradas", tipo);
     return;
   }
 
@@ -112,14 +111,18 @@ async function enviarTemplate(filaId: string, tipo: "confirmacao" | "chamada") {
   const respBody = await resp.json();
 
   if (!resp.ok) {
-    await marcarFalhaEnvio(filaId, JSON.stringify(respBody?.error ?? respBody));
+    const erro = respBody?.error;
+    const detalhe = erro
+      ? `${erro.message ?? "erro da Meta"}${erro.code ? ` (${erro.code})` : ""}${erro.error_data?.details ? ` — ${erro.error_data.details}` : ""}`
+      : JSON.stringify(respBody);
+    await marcarFalhaEnvio(filaId, detalhe, tipo);
     return;
   }
 
   const wamid: string | undefined = respBody?.messages?.[0]?.id;
   const { error: updateError } = await supabase
     .from("fila_sala_profetica")
-    .update({ ultimo_wamid: wamid ?? null })
+    .update({ ultimo_wamid: wamid ?? null, ultimo_erro: null })
     .eq("id", filaId);
 
   if (updateError) {
