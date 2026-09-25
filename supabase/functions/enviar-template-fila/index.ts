@@ -25,6 +25,14 @@ const TEMPLATES: Record<string, { name: string; language: string }> = {
   chamada: { name: "sua_vez_chegou_sala_profetica", language: "pt_BR" },
 };
 
+// Nos templates vai só o primeiro nome, com a inicial maiúscula ("MARIA DA SILVA" -> "Maria").
+function primeiroNome(nomeCompleto: string): string {
+  const primeiro = nomeCompleto.trim().split(/\s+/)[0] ?? "";
+  if (!primeiro) return nomeCompleto.trim();
+  const minusculo = primeiro.toLocaleLowerCase("pt-BR");
+  return minusculo.charAt(0).toLocaleUpperCase("pt-BR") + minusculo.slice(1);
+}
+
 function toE164(raw: string): string {
   const digits = raw.replace(/\D/g, "");
   return digits.startsWith("55") ? digits : `55${digits}`;
@@ -89,7 +97,7 @@ async function enviarTemplate(filaId: string, tipo: "confirmacao" | "chamada") {
         {
           type: "body",
           parameters: [
-            { type: "text", parameter_name: "nome", text: fila.contatos.nome },
+            { type: "text", parameter_name: "nome", text: primeiroNome(fila.contatos.nome) },
           ],
         },
       ],
