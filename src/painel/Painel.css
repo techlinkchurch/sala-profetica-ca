@@ -269,7 +269,8 @@
 
 .painel-paginacao-resumo {
   font-size: var(--text-small);
-  color: var(--color-on-surface-muted);
+  font-weight: var(--weight-medium);
+  color: var(--color-on-surface);
   font-variant-numeric: tabular-nums;
 }
 
@@ -281,6 +282,15 @@
 .painel-paginacao .ds-pagination-nav {
   min-width: 2.25rem;
   height: 2.25rem;
+}
+
+/* Tablet e celular: alvo de toque de 44px. */
+@media (pointer: coarse) {
+  .painel-paginacao .ds-pagination-page,
+  .painel-paginacao .ds-pagination-nav {
+    min-width: 2.75rem;
+    height: 2.75rem;
+  }
 }
 
 /* No celular (uma coluna) as ações vêm antes da fila, que pode ter até 50 pessoas. */

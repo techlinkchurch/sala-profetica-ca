@@ -361,11 +361,21 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
             >
               <RosterList
                 label="Fila de aguardando"
+                minRows={paginasFila > 1 ? POR_PAGINA_FILA : undefined}
                 items={filaDaPagina.map((p) => ({
                   key: p.id,
-                  leading: p.posicao !== null ? `${p.posicao}º` : "–",
+                  leading:
+                    p.posicao !== null ? (
+                      <>
+                        {p.posicao}
+                        <span className="ds-roster-ord">º</span>
+                      </>
+                    ) : (
+                      "–"
+                    ),
                   title: p.nome,
-                  subtitle: `${p.email ?? "sem e-mail"} · ${formatarTelefone(p.telefone)}`,
+                  subtitle: p.email ?? "sem e-mail",
+                  meta: formatarTelefone(p.telefone),
                   trailing: formatarHora(p.criado_em),
                   // os próximos a serem chamados, quando a vaga abrir
                   highlight: !buscando && p.posicao !== null && p.posicao <= Math.max(1, config.grupos_ativos),
@@ -374,9 +384,8 @@ export function TelaPainel({ estado, conexao, atualizadoEm, atualizar, email, on
                   paginasFila > 1 ? (
                     <div className="painel-paginacao">
                       <span className="painel-paginacao-resumo">
-                        {(paginaFilaAtual - 1) * POR_PAGINA_FILA + 1}–
-                        {Math.min(paginaFilaAtual * POR_PAGINA_FILA, filtrados.aguardando.length)} de{" "}
-                        {filtrados.aguardando.length}
+                        Página {paginaFilaAtual} de {paginasFila} · {filtrados.aguardando.length}{" "}
+                        {buscando ? "encontrados" : "na fila"}
                       </span>
                       <Pagination
                         page={paginaFilaAtual}
@@ -662,7 +671,8 @@ function ListaSimples({
       items={pessoas.map((p) => ({
         key: p.id,
         title: p.nome,
-        subtitle: `${p.email ?? "sem e-mail"} · ${formatarTelefone(p.telefone)}`,
+        subtitle: p.email ?? "sem e-mail",
+        meta: formatarTelefone(p.telefone),
         trailing: detalhe(p) || undefined,
       }))}
     />
